@@ -1,0 +1,17 @@
+.container__list--item {
+  height: 600px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.content__list--filter {
+  width: 180px;
+  list-style: none;
+  background-color: brown;
+}
+
+.content__list--filter > li {
+  width: 180px;
+  display: flex;
+  justify-content: space-between;
+}
