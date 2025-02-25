@@ -1,57 +1,47 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import "../css/login.css";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth , db} from "./firebase";
+import { setDoc , doc } from "firebase/firestore";
+import { toast } from "react-toastify";
+
 
 export default function Auth({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
 
-  // Hàm kiểm tra định dạng email hợp lệ
-  const isValidEmail = (email) => {
-    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
-  };
-
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    
-    // Kiểm tra email hợp lệ trước khi gửi yêu cầu
-    if (!isValidEmail(email)) {
-      alert("Email không hợp lệ!");
-      return;
-    }
-    
     try {
-      const response = await fetch("https://6758792b60576a194d10add8.mockapi.io/Login");
-      const users = await response.json();
-
-      if (isSignUp) {
-        // Kiểm tra xem email đã tồn tại chưa
-        const existingUser = users.find((u) => u.email === email);
-        if (existingUser) {
-          alert("Email đã tồn tại!");
-          return;
-        }
-        // Gửi yêu cầu tạo tài khoản mới
-        await fetch("https://6758792b60576a194d10add8.mockapi.io/Login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user; // Lấy thông tin user từ userCredential
+  
+      if (user) {
+        await setDoc(doc(db, "Users", user.uid), {
+          email: user.email
         });
-        alert("Đăng ký thành công! Hãy đăng nhập.");
+        console.log("User registered:", user);
+        toast.success("Đăng ký thành công!",{position: "top-center"});
         setIsSignUp(false);
-      } else {
-        // Xác thực đăng nhập
-        const user = users.find((u) => u.email === email && u.password === password);
-        if (user) {
-          onLogin();
-        } else {
-          alert("Sai tài khoản hoặc mật khẩu!");
-        }
       }
     } catch (error) {
-      console.error("Lỗi kết nối API:", error);
-      alert("Không thể kết nối đến máy chủ!");
+      console.error("Lỗi đăng ký:", error.message);
+      toast.success("Đăng ký thất bại.",{position: "bottom-center"});
+    }
+  };
+  
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      toast.success("Đăng nhập thành công!",{position: "top-center"});
+      onLogin();
+    } catch (error) {
+      console.error("Lỗi đăng nhập:", error);
+      toast.success("Sai email hoặc mật khẩu! Vui lòng thử lại.",{position: "bottom-center"});
     }
   };
 
@@ -63,7 +53,7 @@ export default function Auth({ onLogin }) {
           <div className="login-box">
             <h2 className="login-title">{isSignUp ? "Create Account" : "Welcome 👋"}</h2>
             <p className="login-subtitle">{isSignUp ? "Sign up here" : "Please login here"}</p>
-            <form onSubmit={handleSubmit} className="login-form">
+            <form onSubmit={isSignUp ? handleRegister : handleLogin} className="login-form">
               <label>Email Address:</label>
               <input
                 type="email"
