@@ -5,44 +5,47 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 import { auth , db} from "./firebase";
 import { setDoc , doc } from "firebase/firestore";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Auth({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
+  const navigate = useNavigate();
+
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user; // Lấy thông tin user từ userCredential
+    // try {
+    //   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    //   const user = userCredential.user; // Lấy thông tin user từ userCredential
   
-      if (user) {
-        await setDoc(doc(db, "Users", user.uid), {
-          email: user.email
-        });
-        console.log("User registered:", user);
-        toast.success("Đăng ký thành công!",{position: "top-center"});
-        setIsSignUp(false);
-      }
-    } catch (error) {
-      console.error("Lỗi đăng ký:", error.message);
-      toast.success("Đăng ký thất bại.",{position: "bottom-center"});
-    }
+    //   if (user) {
+    //     await setDoc(doc(db, "Users", user.uid), {
+    //       email: user.email
+    //     });
+    //     console.log("User registered:", user);
+    //     toast.success("Đăng ký thành công!",{position: "top-center"});
+    //     setIsSignUp(false);
+    //   }
+    // } catch (error) {
+    //   console.error("Lỗi đăng ký:", error.message);
+    //   toast.success("Đăng ký thất bại.",{position: "bottom-center"});
+    // }
   };
   
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      toast.success("Đăng nhập thành công!",{position: "top-center"});
-      onLogin();
-    } catch (error) {
-      console.error("Lỗi đăng nhập:", error);
-      toast.success("Sai email hoặc mật khẩu! Vui lòng thử lại.",{position: "bottom-center"});
-    }
+    navigate("/dashboard")
+    // try {
+    //   await signInWithEmailAndPassword(auth, email, password);
+    //   toast.success("Đăng nhập thành công!",{position: "top-center"});
+    //   onLogin();
+    // } catch (error) {
+    //   console.error("Lỗi đăng nhập:", error);
+    //   toast.success("Sai email hoặc mật khẩu! Vui lòng thử lại.",{position: "bottom-center"});
+    // }
   };
 
   return (
@@ -95,6 +98,6 @@ export default function Auth({ onLogin }) {
   );
 }
 
-Auth.propTypes = {
-  onLogin: PropTypes.func.isRequired,
-};
+// Auth.propTypes = {
+//   onLogin: PropTypes.func.isRequired,
+// };
