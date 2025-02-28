@@ -1,31 +1,26 @@
-import { useState } from "react";
 import "./App.css";
-import Header from "./assets/components/Header";
-import Footer from "./assets/components/Footer";
-import ListItem from "./assets/components/ListItem";
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route } from "react-router-dom"; // Sửa "react-router" thành "react-router-dom"
 import { Navigate } from "react-router-dom";
 
+import Header from "./assets/components/Header";
+import Footer from "./assets/components/Footer";
 import Auth from "./assets/components/Login";
 import Home from "./assets/components/Home";
 
-
 function App() {
- 
-
   return (
     <>
-
       <BrowserRouter>
+        <Header />
         <Routes>
           <Route path="/">
             <Route index element={<Navigate to="login" />} />
             <Route path="login" element={<Auth />} />
-            <Route path="dashboard" element={<Home></Home>}></Route>
+            <Route path="dashboard" element={<Home />} />
           </Route>
         </Routes>
+        <Footer />
       </BrowserRouter>
-     
     </>
   );
 }
