@@ -121,25 +121,22 @@ export default function Home() {
         <div className="customer_feedback">
           <div className="feedback_item">
             <div className="feedback_rating">★★★★★</div>
-            <p className="feedback_text">
-              "It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout."
-            </p>
+            <p className="feedback_text">It is a long established fact that a reader will be distracted bythe readable content of a page when looking at its layout</p>
             <p className="feedback_author">Leslie Alexander, Model</p>
           </div>
           <div className="feedback_item">
             <div className="feedback_rating">★★★★★</div>
             <p className="feedback_text">
-              "It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout."
+              It is a long established fact that a reader will be distracted by
+              the readable content of a page when looking at its layout.
             </p>
             <p className="feedback_author">Jacob Jones, Co-founder</p>
           </div>
           <div className="feedback_item">
             <div className="feedback_rating">★★★★★</div>
             <p className="feedback_text">
-              "It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout."
+              It is a long established fact that a reader will be distracted by
+              the readable content of a page when looking at its layout.
             </p>
             <p className="feedback_author">Jenny Wilson, Fashion Designer</p>
           </div>
