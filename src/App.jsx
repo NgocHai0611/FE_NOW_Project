@@ -6,11 +6,13 @@ import Header from "./assets/components/Header";
 import Footer from "./assets/components/Footer";
 import Auth from "./assets/components/Login";
 import Home from "./assets/components/Home";
+import { AuthProvider } from "../src/assets/components/AuthUtils/AuthContexts";
 
 function App() {
   return (
     <>
       <BrowserRouter>
+      <AuthProvider>
         <Header />
         <Routes>
           <Route path="/">
@@ -20,6 +22,7 @@ function App() {
           </Route>
         </Routes>
         <Footer />
+        </AuthProvider>
       </BrowserRouter>
     </>
   );
