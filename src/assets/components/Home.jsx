@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import home_women from "../imgs/home_women.png";
-import '../css/home.css'
+import { Link } from "react-router-dom"; 
+import '../css/home.css';
+
 export default function Home() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+  
+    fetch('https://6494e6aeb08e17c91791736d.mockapi.io/api/book/product')
+      .then(response => response.json())
+      .then(data => setProducts(data))
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
   return (
     <div className="home_container">
       <img
@@ -16,6 +28,7 @@ export default function Home() {
           <button className="nav_button">→</button>
         </div>
       </div>
+
       <div className="categories_grid">
         <div className="category_item">
           <div className="image_container">
@@ -46,70 +59,17 @@ export default function Home() {
       <div className="bestsellers_container">
         <h2 className="bestsellers_title">Our Bestseller</h2>
         <div className="bestsellers_grid">
-          <div className="product_card">
-            <img src={home_women} alt="Roadstar" className="product_image" />
-            <h3 className="product_name">Roadstar</h3>
-            <p className="product_price">$38.00</p>
-          </div>
-          <div className="product_card">
-            <img src={home_women} alt="Allen Solly" className="product_image" />
-            <h3 className="product_name">Allen Solly</h3>
-            <p className="product_price">$55.00</p>
-          </div>
-          <div className="product_card">
-            <img src={home_women} alt="Louis Philippe Sport" className="product_image" />
-            <h3 className="product_name">Louis Philippe Sport</h3>
-            <p className="product_price">$60.00</p>
-          </div>
-          <div className="product_card">
-            <img src={home_women} alt="Adidas" className="product_image" />
-            <h3 className="product_name">Adidas</h3>
-            <p className="product_price">$60.00</p>
-          </div>
-          <div className="product_card">
-            <img src={home_women} alt="Trendyol" className="product_image" />
-            <h3 className="product_name">Trendyol</h3>
-            <p className="product_price">$45.00</p>
-          </div>
-          <div className="product_card">
-            <img src={home_women} alt="YK Disney" className="product_image" />
-            <h3 className="product_name">YK Disney</h3>
-            <p className="product_price">$40.00</p>
-          </div>
-          <div className="product_card">
-            <img src={home_women} alt="US Polo" className="product_image" />
-            <h3 className="product_name">US Polo</h3>
-            <p className="product_price">$50.00</p>
-          </div>
-          <div className="product_card">
-            <img src={home_women} alt="Zyla" className="product_image" />
-            <h3 className="product_name">Zyla</h3>
-            <p className="product_price">$70.00</p>
-          </div>
+          {products.map(product => (
+            <Link to={`/product/${product.id}`} className="product_card" key={product.id}>
+              <img src={product.img} alt={product.name} className="product_image" />
+              <h3 className="product_name">{product.name}</h3>
+              <p className="product_price">${product.price}</p>
+            </Link>
+          ))}
         </div>
       </div>
-    {/* deals of the month */}
-    <div className="deals_container">
-      <div className="deals_content">
-        <div className="deals_title_container">
-          <h2 className="deals_title">Deals of the Month</h2>
-        </div>
-        <div className="deals_description">
-          <p>
-            It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters.
-          </p>
-        </div>
-        <button className="view_all_products_button">View All Products →</button>
-      </div>
-      <div className="deals_image">
-        <img src={home_women} alt="Deals of the Month" className="deals_image_img" />
-      </div>
-    </div>
 
-
-
-    
-      <div className="customer_container">
+     <div className="customer_container">
         <div className="customer_title_container">
           <h2 className="customer_title">What our Customers Say</h2>
           <div className="customer_buttons">
