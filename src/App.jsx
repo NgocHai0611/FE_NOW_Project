@@ -6,7 +6,11 @@ import Header from "./assets/components/Header";
 import Footer from "./assets/components/Footer";
 import Auth from "./assets/components/Login";
 import Home from "./assets/components/Home";
+
 import ManagementProduct from "./assets/components/ManagementProduct";
+
+import MyProfile from "./assets/components/MyProfile";
+import CheckOut from "./assets/components/CheckOut"; // 🔹 Import CheckOut.jsx
 
 function App() {
   return (
@@ -19,6 +23,7 @@ function App() {
             <Route path="login" element={<Auth />} />
             <Route path="dashboard" element={<Home />} />
             <Route path="managementproduct" element={<ManagementProduct />} />
+            <Route path="myprofile" element={<MyProfile />} />
           </Route>
         </Routes>
         <Footer />

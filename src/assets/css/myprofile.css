@@ -1,0 +1,87 @@
+/* Container chính */
+.profile-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f8f9fa;
+    padding: 20px;
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    width: 25%;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .sidebar h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  
+  /* Khung ảnh profile */
+  .profile-picture {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #ddd;
+  }
+  
+  .profile-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Danh sách menu */
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 16px;
+  }
+  
+  .menu-item .icon {
+    margin-right: 10px;
+    font-size: 18px;
+  }
+  
+  .menu-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Khi được chọn */
+  .menu-item.active {
+    background-color: black;
+    color: white;
+  }
+  
+  /* Khu vực nội dung */
+  .content {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .content h2 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .content p {
+    color: gray;
+    margin-top: 10px;
+  }
+  
