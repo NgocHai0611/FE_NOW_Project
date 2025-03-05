@@ -1,0 +1,167 @@
+.product_detail_container {
+    display: flex;
+    padding: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product_images {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.main_image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.thumbnail_images {
+    display: flex;
+    margin-top: 10px;
+    
+}
+.thumbnail_images img{
+    transform: scale(1.2);
+}
+.thumbnail {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border 0.3s;
+}
+
+.thumbnail:hover {
+    border-color: #000;
+}
+
+.product_info {
+    flex: 2;
+}
+
+.product_title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.product_price {
+    font-size: 20px;
+    color: #b12704;
+    margin-bottom: 10px;
+}
+
+.product_description {
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+.product_color h3{
+    margin-bottom: 5px;
+}
+.product_color {
+    margin-bottom: 20px;
+}
+.product_color span:hover{
+    transform: scale(1.2);
+}
+.color_options {
+    display: flex;
+}
+
+.color_option {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.product_sizes {
+    margin-bottom: 20px;
+}
+
+.sizes {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.size_option {
+    border: 1px solid #000;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.size_option:hover {
+    background-color: #000000;
+    color: #fff;
+}
+
+.quantity_container {
+    display: flex;
+    align-items: center;
+  
+}
+
+.quantity_button {
+    border: 1px solid #000;
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin: 0 10px; 
+}
+
+.quantity_display {
+    font-size: 16px;
+    margin: 0 5px; 
+}
+.quantity_button:hover{
+    background-color: #000;
+    color: #ddd;
+}
+.action_buttons {
+    display: flex;
+    align-items: center;
+    margin-top: 30px; 
+}
+
+.add_to_cart_button {
+    background-color: #000000;
+    color: #fff;
+    width: 300px;  
+    padding: 10px 40px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    margin-right: 10px; 
+}
+
+.add_to_cart_button:hover {
+    background-color:#ff0000;
+}
+
+.favorite_button {
+    
+    
+    border-radius: 4px; 
+    cursor: pointer;
+    font-size: 24px; 
+    color: #ff0000; 
+    padding: 4px 8px; 
+    transition: background-color 0.3s, color 0.3s; 
+}
+
+.favorite_button:hover {
+    background-color: #ff0000; 
+    color: #fff; 
+}
