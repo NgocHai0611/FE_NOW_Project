@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import ManagementProduct from "./assets/components/ManagementProduct";
 
 import MyProfile from "./assets/components/MyProfile";
+import { AuthProvider } from "../src/assets/components/AuthUtils/AuthContexts";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -25,6 +26,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
+      <AuthProvider>
         <Header />
         <Routes>
           <Route path="/">
@@ -43,6 +45,7 @@ function App() {
           </Route>
         </Routes>
         <Footer />
+        </AuthProvider>
       </BrowserRouter>
     </>
   );

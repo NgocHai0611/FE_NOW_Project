@@ -4,11 +4,17 @@ import {
   faMagnifyingGlass,
   faCartShopping,
 } from "@fortawesome/free-solid-svg-icons";
-
+import { useNavigate } from "react-router-dom";
 import { faHeart } from "@fortawesome/free-regular-svg-icons"; //
 import logo from "../imgs/logo.png";
 
 export default function Header() {
+  const navigate = useNavigate();
+
+  const toLogin = async (e) => {
+    e.preventDefault();
+    navigate("/login");
+  }
   return (
     <div className="container__header">
       <div className="header">
@@ -54,7 +60,7 @@ export default function Header() {
           </li>
         </ul>
 
-        <button className="btn--login">Login</button>
+        <button className="btn--login" onClick={toLogin} >Login</button>
       </div>
     </div>
   );
