@@ -1,87 +1,396 @@
 /* Container chính */
 .profile-container {
-    display: flex;
-    height: 100vh;
-    background-color: #f8f9fa;
-    padding: 20px;
-  }
-  
-  /* Sidebar */
-  .sidebar {
-    width: 25%;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .sidebar h2 {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 15px;
-  }
-  
-  /* Khung ảnh profile */
-  .profile-picture {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 15px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid #ddd;
-  }
-  
-  .profile-picture img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  /* Danh sách menu */
-  .sidebar ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .menu-item {
-    display: flex;
-    align-items: center;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 16px;
-  }
-  
-  .menu-item .icon {
-    margin-right: 10px;
-    font-size: 18px;
-  }
-  
-  .menu-item:hover {
-    background-color: #f0f0f0;
-  }
-  
-  /* Khi được chọn */
-  .menu-item.active {
-    background-color: black;
-    color: white;
-  }
-  
-  /* Khu vực nội dung */
-  .content {
-    flex: 1;
-    padding: 20px;
-  }
-  
-  .content h2 {
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .content p {
-    color: gray;
-    margin-top: 10px;
-  }
-  
+  display: flex;
+  height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 25%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.sidebar h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Khung ảnh profile */
+.profile-picture {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 15px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #ddd;
+}
+
+.profile-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Danh sách menu */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 16px;
+}
+
+.menu-item .icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.menu-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* Khi được chọn */
+.menu-item.active {
+  background-color: black;
+  color: white;
+}
+
+/* Khu vực nội dung */
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+
+
+.content p {
+  color: gray;
+  margin-top: 10px;
+}
+.profile-container {
+display: flex;
+align-items: flex-start;
+width: 85.3%;
+margin: auto;
+gap: 20px;
+}
+
+.sidebar {
+width: 25%;
+background: #f8f8f8;
+padding: 20px;
+border-radius: 8px;
+}
+
+.content {
+flex: 1;
+background: #fff;
+padding: 20px;
+border-radius: 8px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.personal-info {
+display: flex;
+flex-direction: column;
+gap: 30px;
+}
+
+.header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.profile-picture-update {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.form-row {
+display: flex;
+justify-content: space-between;
+gap: 250px; /* Điều chỉnh khoảng cách giữa các ô */
+}
+
+.form-group {
+flex: 1;
+}
+
+.full-width {
+width: 100%;
+}
+.edit-profile{
+padding: 15px;
+border-radius: 10px;
+color: #fff;
+background-color: #000;
+}
+.manage-addresses {
+padding: 20px;
+}
+
+.add-address {
+background-color: #000;
+color: #fff;
+border: none;
+padding: 10px 15px;
+border-radius: 5px;
+font-size: 16px;
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: 5px;
+}
+
+.add-address:hover {
+background-color: #333;
+}
+
+.address-list {
+margin-top: 20px;
+}
+
+.address-item {
+display: flex;
+justify-content: space-between;
+align-items: center;
+background: #f8f8f8;
+padding: 15px;
+border-radius: 8px;
+margin-bottom: 10px;
+transition: 0.3s ease-in-out;
+}
+
+.address-item:hover {
+background: #ececec;
+}
+
+.address-info h3 {
+margin: 0;
+font-size: 18px;
+}
+
+.address-info p {
+margin: 5px 0;
+color: #666;
+font-size: 14px;
+display: flex;
+align-items: center;
+gap: 5px;
+}
+
+.address-actions {
+display: flex;
+gap: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+border: none;
+padding: 8px 12px;
+border-radius: 5px;
+font-size: 14px;
+display: flex;
+align-items: center;
+gap: 5px;
+cursor: pointer;
+transition: 0.3s ease;
+}
+
+.edit-btn {
+background-color: #f1f1f1;
+color: #333;
+}
+
+.edit-btn:hover {
+background-color: #ddd;
+}
+
+.delete-btn {
+background-color: #ffe5e5;
+color: #ff4d4d;
+}
+
+.delete-btn:hover {
+background-color: #ffcccc;
+}
+.address-form {
+background: white;
+padding: 20px;
+border-radius: 8px;
+box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+width: 100%;
+max-width: 400px;
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+
+.address-form input {
+width: 100%;
+padding: 12px;
+border: 1px solid #ddd;
+border-radius: 6px;
+font-size: 16px;
+transition: all 0.3s ease;
+}
+
+.address-form input:focus {
+border-color: #6c5ce7;
+box-shadow: 0 0 5px rgba(108, 92, 231, 0.5);
+outline: none;
+}
+
+.address-form button {
+padding: 12px;
+border: none;
+border-radius: 6px;
+font-size: 16px;
+cursor: pointer;
+background-color: #000000;
+color: white;
+transition: all 0.3s ease;
+}
+
+.address-form button:hover {
+background-color: #000000;
+}
+
+.saved-cards .card-item {
+display: flex;
+align-items: center;
+background: #fff;
+padding: 12px;
+border-radius: 8px;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+margin-bottom: 12px;
+width: 100%; /* Để card kéo dài theo chiều ngang */
+max-width: 450px; /* Giữ kích thước hợp lý */
+}
+
+.card-left {
+margin-right: 12px;
+}
+
+.card-image {
+width: 60px;
+height: 40px;
+object-fit: cover;
+border-radius: 6px;
+}
+
+.card-info {
+flex: 1; /* Cho phép card-info mở rộng */
+}
+
+.delete-btn {
+background: #ff4d4d;
+color: white;
+border: none;
+padding: 6px 12px;
+border-radius: 6px;
+cursor: pointer;
+}
+
+.delete-btn:hover {
+background: #e60000;
+}
+
+
+
+
+
+.settings {
+flex: 1; /* Cho phép khu vực cài đặt mở rộng tối đa */
+padding: 20px;
+background: white;
+border-radius: 10px;
+}
+
+.setting-item {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 16px 0;
+border-bottom: 1px solid #ddd;
+}
+
+.setting-item h3 {
+font-size: 16px;
+font-weight: 600;
+}
+
+.setting-item p {
+font-size: 14px;
+color: #777;
+}
+
+.select-box {
+padding: 6px 12px;
+border: 1px solid #ddd;
+border-radius: 6px;
+font-size: 14px;
+}
+
+/* Toggle Switch */
+.switch {
+position: relative;
+display: inline-block;
+width: 40px;
+height: 20px;
+}
+
+.switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+
+.slider {
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #ccc;
+border-radius: 20px;
+transition: 0.4s;
+} 
+
+.slider:before {
+position: absolute;
+content: "";
+height: 14px;
+width: 14px;
+left: 3px;
+bottom: 3px;
+background-color: white;
+border-radius: 50%;
+transition: 0.4s;
+}
+
+input:checked + .slider {
+background-color: #4caf50;
+}
+
+input:checked + .slider:before {
+transform: translateX(20px);
+}
+
+
