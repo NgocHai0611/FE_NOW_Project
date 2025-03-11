@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import ManagementProduct from "./assets/components/ManagementProduct";
 
 import MyProfile from "./assets/components/MyProfile";
-import CheckOut from "./assets/components/CheckOut"; // 🔹 Import CheckOut.jsx
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -29,7 +28,7 @@ function App() {
         <Header />
         <Routes>
           <Route path="/">
-            <Route index element={<Navigate to="dashboard" />} />
+            <Route index element={<Navigate to="login" />} />
             <Route path="login" element={<Auth />} />
 
             <Route path="dashboard" element={<Home />} />
