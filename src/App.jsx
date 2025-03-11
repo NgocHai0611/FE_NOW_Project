@@ -7,6 +7,7 @@ import Footer from "./assets/components/Footer";
 import Auth from "./assets/components/Login";
 import Home from "./assets/components/Home";
 import ProductDetail from "./assets/components/ProductDetail";
+import ShoppingCart from "./assets/components/ShoppingCart";
 import { useEffect, useState } from "react";
 
 import ManagementProduct from "./assets/components/ManagementProduct";
@@ -23,6 +24,7 @@ function App() {
       .then((data) => setProducts(data))
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
+
   return (
     <>
       <BrowserRouter>
@@ -36,12 +38,11 @@ function App() {
             <Route path="dashboard" element={<Home />} />
             <Route path="managementproduct" element={<ManagementProduct />} />
             <Route path="myprofile" element={<MyProfile />} />
-
             <Route path="dashboard" element={<Home products={products} />} />
             <Route
               path="/product/:id"
-              element={<ProductDetail products={products} />}
-            />
+              element={<ProductDetail products={products} />}/>
+             <Route path="shoppingcart" element={<ShoppingCart />} />
           </Route>
         </Routes>
         <Footer />
