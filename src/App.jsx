@@ -26,25 +26,25 @@ function App() {
   return (
     <>
       <BrowserRouter>
-      <AuthProvider>
-        <Header />
-        <Routes>
-          <Route path="/">
-            <Route index element={<Navigate to="login" />} />
-            <Route path="login" element={<Auth />} />
+        <AuthProvider>
+          <Header />
+          <Routes>
+            <Route path="/">
+              <Route index element={<Navigate to="login" />} />
+              <Route path="login" element={<Auth />} />
 
-            <Route path="dashboard" element={<Home />} />
-            <Route path="managementproduct" element={<ManagementProduct />} />
-            <Route path="myprofile" element={<MyProfile />} />
+              <Route path="dashboard" element={<Home />} />
+              <Route path="managementproduct" element={<ManagementProduct />} />
+              <Route path="myprofile" element={<MyProfile />} />
 
-            <Route path="dashboard" element={<Home products={products} />} />
-            <Route
-              path="/product/:id"
-              element={<ProductDetail products={products} />}
-            />
-          </Route>
-        </Routes>
-        <Footer />
+              <Route path="dashboard" element={<Home products={products} />} />
+              <Route
+                path="/product/:id"
+                element={<ProductDetail products={products} />}
+              />
+            </Route>
+          </Routes>
+          <Footer />
         </AuthProvider>
       </BrowserRouter>
     </>

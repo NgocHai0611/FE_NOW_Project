@@ -31,14 +31,19 @@ export default function App() {
       setPassword("");
       setIsSignUp(false); // Switch back to login view
     } catch (error) {
-      console.error("Registration failed:", error.response?.data?.error || error.message);
-      setErrorMessage(error.response?.data?.error || "Registration failed. Please try again.");
+      console.error(
+        "Registration failed:",
+        error.response?.data?.error || error.message
+      );
+      setErrorMessage(
+        error.response?.data?.error || "Registration failed. Please try again."
+      );
     }
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
+
     if (!username || !password) {
       setErrorMessage("Please enter both username and password.");
       return;
@@ -64,7 +69,10 @@ export default function App() {
       console.log(token);
       navigate("/dashboard");
     } catch (error) {
-      console.error("Authentication failed:", error.response?.data || error.message);
+      console.error(
+        "Authentication failed:",
+        error.response?.data || error.message
+      );
       setToken(null);
       localStorage.removeItem("token");
 
@@ -88,12 +96,21 @@ export default function App() {
       <div className="right-section">
         <div className="login-container">
           <div className="login-box">
-            <h2 className="login-title">{isSignUp ? "Create Account" : "Welcome 👋"}</h2>
-            <p className="login-subtitle">{isSignUp ? "Sign up here" : "Please login here"}</p>
+            <h2 className="login-title">
+              {isSignUp ? "Create Account" : "Welcome 👋"}
+            </h2>
+            <p className="login-subtitle">
+              {isSignUp ? "Sign up here" : "Please login here"}
+            </p>
             {errorMessage && (
-              <div style={{ color: "red", marginBottom: "1rem" }}>{errorMessage}</div>
+              <div style={{ color: "red", marginBottom: "1rem" }}>
+                {errorMessage}
+              </div>
             )}
-            <form onSubmit={isSignUp ? handleRegister : handleLogin} className="login-form">
+            <form
+              onSubmit={isSignUp ? handleRegister : handleLogin}
+              className="login-form"
+            >
               <label>Username:</label>
               <input
                 type="text" // Changed from "username" to "text" as "username" isn't a valid type
@@ -121,25 +138,23 @@ export default function App() {
                     <label htmlFor="rememberMe"> Remember Me</label>
                   </div>
                 )}
-                <a 
-                  href="#" 
-                  className="forgot-password" 
+                <a
+                  href="#"
+                  className="forgot-password"
                   onClick={(e) => {
                     e.preventDefault();
                     setIsSignUp(!isSignUp);
                     setErrorMessage(null);
                   }}
                 >
-                  {isSignUp ? "Already have an account? Login" : "Forgot Password? Sign up"}
+                  {isSignUp
+                    ? "Already have an account? Login"
+                    : "Forgot Password? Sign up"}
                 </a>
               </div>
-              
-              <button 
-                type="submit" 
-                className="login-button"
-                disabled={loading}
-              >
-                {loading ? "Processing..." : (isSignUp ? "Sign Up" : "Login")}
+
+              <button type="submit" className="login-button" disabled={loading}>
+                {loading ? "Processing..." : isSignUp ? "Sign Up" : "Login"}
               </button>
             </form>
           </div>
