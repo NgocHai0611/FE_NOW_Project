@@ -6,6 +6,7 @@ import Header from "./assets/components/Header";
 import Footer from "./assets/components/Footer";
 import Auth from "./assets/components/Login";
 import Home from "./assets/components/Home";
+import CheckOut from "./assets/components/CheckOut";
 import ProductDetail from "./assets/components/ProductDetail";
 import ShoppingCart from "./assets/components/ShoppingCart";
 import { useEffect, useState } from "react";
@@ -13,6 +14,7 @@ import { useEffect, useState } from "react";
 import ManagementProduct from "./assets/components/ManagementProduct";
 
 import MyProfile from "./assets/components/MyProfile";
+import Preview from "./assets/components/Preview";
 import { AuthProvider } from "../src/assets/components/AuthUtils/AuthContexts";
 
 function App() {
@@ -52,6 +54,12 @@ function App() {
             <Route path="dashboard" element={<Home />} />
             <Route path="managementproduct" element={<ManagementProduct />} />
             <Route path="myprofile" element={<MyProfile />} />
+<<<<<<< HEAD
+=======
+            <Route path="checkout" element={<CheckOut />} />
+            <Route path="prev" element={<Preview />} />
+
+>>>>>>> a2358fb6473c7380920e78839b278449e616e96f
             <Route path="dashboard" element={<Home products={products} />} />
             <Route
               path="/product/:id"

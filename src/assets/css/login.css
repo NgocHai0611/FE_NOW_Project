@@ -92,4 +92,6 @@
     width: 16px;
     height: 16px;
   }
-  
+  .product-price price-column{
+    margin-left: -1000px;
+  }
