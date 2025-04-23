@@ -4,7 +4,7 @@ import App from "./App.jsx";
 import { AuthProvider } from "./assets/components/AuthUtils/AuthContexts.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <AuthProvider>
-    <App />
-  </AuthProvider>
+  <StrictMode>
+        <App />
+  </StrictMode>
 );

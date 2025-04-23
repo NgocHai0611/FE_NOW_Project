@@ -1,35 +1,52 @@
-import { useState, useContext } from "react"; // Added useContext to imports
+import { useContext, useState } from "react";
+import { AuthContext } from "./AuthUtils/AuthContexts";
 import "../css/login.css";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "./AuthUtils/AuthContexts";
 import axios from "axios";
 
-export default function Login() {
+const Login = () => {
+  const { login } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [token, setToken] = useState(null);
+  const [email, setEmail] = useState(""); // Đổi từ username thành email
   const { handleSetUserLogin } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState(""); // Thêm state cho name
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
+  
+    if (!name || !email || !password) {
+      setErrorMessage("Please enter your name, email, and password.");
+      return;
+    }
+  
+    setLoading(true);
+    setErrorMessage("");
+  
     try {
       const response = await axios.post(
-        "http://localhost:3004/api/auth/register", // Updated to match handleLogin URL
+        "http://localhost:3004/api/auth/register", // API endpoint
         {
-          username,
+          name, // Gửi thêm name
+          email,
           password,
         },
         {
-          headers: { "Content-Type": "application/json" }, // Added headers to match handleLogin
+          headers: { "Content-Type": "application/json" },
         }
       );
-      setErrorMessage(response.data.message); // Using errorMessage since that's what the component uses
-      setUsername(""); // Reset form
-      setPassword("");
-      setIsSignUp(false); // Switch back to login view
+  
+      console.log("Registration successful:", response.data);
+      setErrorMessage("Registration successful! Please log in.");
+      setName(""); // Reset name field
+      setEmail(""); // Reset email field
+      setPassword(""); // Reset password field
+      setIsSignUp(false); // Chuyển về chế độ đăng nhập
     } catch (error) {
       console.error(
         "Registration failed:",
@@ -38,40 +55,38 @@ export default function Login() {
       setErrorMessage(
         error.response?.data?.error || "Registration failed. Please try again."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    if (!username || !password) {
-      setErrorMessage("Please enter both username and password.");
+  
+    if (!email || !password) {
+      setErrorMessage("Please enter both email and password.");
       return;
     }
-
+  
     setLoading(true);
     setErrorMessage("");
-    console.log("Sending:", { username, password });
-
+    console.log("Sending:", { email, password });
+  
     try {
       const response = await axios.post(
         "http://localhost:3004/api/auth/login",
-        { username, password },
+        { email, password },
         {
           headers: { "Content-Type": "application/json" },
         }
       );
-
-      // console.log("Response:", response.data);
-      // const { token } = response.data;
-      // setToken(token);
-      // localStorage.setItem("token", token);
-      // console.log(token);
-
-      const user = response.data.user || response.data;
-      handleSetUserLogin(user);
-
-      // localStorage.setItem("user", JSON.stringify(user));
+  
+      console.log("Response:", response.data);
+      const { token, user } = response.data;
+      setToken(token);
+      localStorage.setItem("token", token);
+      login(user); // Gọi hàm login từ AuthContext
+      console.log("User:", user);
       navigate("/dashboard");
     } catch (error) {
       console.error(
@@ -80,7 +95,7 @@ export default function Login() {
       );
       setToken(null);
       localStorage.removeItem("token");
-
+  
       if (error.response && error.response.data) {
         setErrorMessage(
           typeof error.response.data === "string"
@@ -116,12 +131,26 @@ export default function Login() {
               onSubmit={isSignUp ? handleRegister : handleLogin}
               className="login-form"
             >
-              <label>Username:</label>
+              {isSignUp && ( // Chỉ hiển thị trường name khi đăng ký
+                <>
+                  <label>Name:</label>
+                  <input
+                    type="text"
+                    placeholder="Enter your name..."
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    disabled={loading}
+                  />
+                </>
+              )}
+
+              <label>Email:</label>
               <input
-                type="text" // Changed from "username" to "text" as "username" isn't a valid type
-                placeholder="Enter your username..."
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                type="email" // Đổi placeholder và type cho phù hợp
+                placeholder="Enter your email..."
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={loading}
               />
@@ -167,4 +196,6 @@ export default function Login() {
       </div>
     </div>
   );
-}
+};
+
+export default Login;

@@ -25,6 +25,9 @@ import PaymentSuccess from "./assets/components/Payments/PaymentSuccess";
 import PaymentFail from "./assets/components/Payments/PaymentFail";
 import CheckoutTest from "./assets/components/Payments/CheckOutTest";
 
+//Route
+import ProtectedRoute from "./assets/components/ProtectedRoute/protectedRoute";
+
 function App() {
   const [products, setProducts] = useState([]);
 
@@ -44,7 +47,12 @@ function App() {
             <Routes>
               <Route path="/" element={<Navigate to="/login" />} />
               <Route path="/login" element={<Auth />} />
-              <Route path="/dashboard" element={<Home products={products} />} />
+              <Route
+                path="/dashboard"
+                element={
+                    <Home products={products} />
+                }
+              />
               <Route
                 path="/product/:id"
                 element={<ProductDetail products={products} />}
