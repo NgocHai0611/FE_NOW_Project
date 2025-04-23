@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthUtils/AuthContexts";
 import axios from "axios";
 
-export default function App() {
+export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  const { setToken } = useContext(AuthContext);
+  const { handleSetUserLogin } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -17,7 +17,7 @@ export default function App() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/auth/register", // Updated to match handleLogin URL
+        "http://localhost:3004/api/auth/register", // Updated to match handleLogin URL
         {
           username,
           password,
@@ -55,18 +55,23 @@ export default function App() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/auth/login",
+        "http://localhost:3004/api/auth/login",
         { username, password },
         {
           headers: { "Content-Type": "application/json" },
         }
       );
 
-      console.log("Response:", response.data);
-      const { token } = response.data;
-      setToken(token);
-      localStorage.setItem("token", token);
-      console.log(token);
+      // console.log("Response:", response.data);
+      // const { token } = response.data;
+      // setToken(token);
+      // localStorage.setItem("token", token);
+      // console.log(token);
+
+      const user = response.data.user || response.data;
+      handleSetUserLogin(user);
+
+      // localStorage.setItem("user", JSON.stringify(user));
       navigate("/dashboard");
     } catch (error) {
       console.error(

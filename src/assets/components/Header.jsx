@@ -8,10 +8,12 @@ import { useNavigate } from "react-router-dom";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import ShoppingCart from "./ShoppingCart";
 import logo from "../imgs/logo.png";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "./AuthUtils/AuthContexts";
 
 export default function Header() {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
   const [isOpen, setIsOpen] = useState(false);
   const toggleModal = () => {
@@ -67,9 +69,17 @@ export default function Header() {
           </li>
         </ul>
 
-        <button className="btn--login" onClick={toLogin}>
-          Login
-        </button>
+        {console.log(user)}
+
+        {user ? (
+          <div>
+            <img src={user.avatar} alt="" className="avatar__login" />
+          </div>
+        ) : (
+          <button className="btn--login" onClick={toLogin}>
+            Login
+          </button>
+        )}
       </div>
       {isOpen && <ShoppingCart onClose={toggleModal} />}
     </div>

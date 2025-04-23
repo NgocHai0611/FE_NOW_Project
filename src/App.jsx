@@ -12,16 +12,24 @@ import ShoppingCart from "./assets/components/ShoppingCart";
 import { useEffect, useState } from "react";
 
 import ManagementProduct from "./assets/components/ManagementProduct";
-
 import MyProfile from "./assets/components/MyProfile";
 import Preview from "./assets/components/Preview";
+
+// Context
 import { AuthProvider } from "../src/assets/components/AuthUtils/AuthContexts";
+import { CartProvider } from "./assets/components/Context/CartContext";
+
+// Payment
+import PaymentProcess from "./assets/components/Payments/Payment";
+import PaymentSuccess from "./assets/components/Payments/PaymentSuccess";
+import PaymentFail from "./assets/components/Payments/PaymentFail";
+import CheckoutTest from "./assets/components/Payments/CheckOutTest";
 
 function App() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch("https://6494e6aeb08e17c91791736d.mockapi.io/api/book/product")
+    fetch("http://localhost:8000/products/listProduct")
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.error("Error fetching data:", error));
@@ -31,44 +39,31 @@ function App() {
     <>
       <BrowserRouter>
         <AuthProvider>
-          <Header />
-          <Routes>
-            <Route path="/">
-              <Route index element={<Navigate to="login" />} />
-              <Route path="login" element={<Auth />} />
-
-<<<<<<< HEAD
-              <Route path="dashboard" element={<Home />} />
-              <Route path="managementproduct" element={<ManagementProduct />} />
-              <Route path="myprofile" element={<MyProfile />} />
-
-              <Route path="dashboard" element={<Home products={products} />} />
+          <CartProvider>
+            <Header />
+            <Routes>
+              <Route path="/" element={<Navigate to="/login" />} />
+              <Route path="/login" element={<Auth />} />
+              <Route path="/dashboard" element={<Home products={products} />} />
               <Route
                 path="/product/:id"
                 element={<ProductDetail products={products} />}
               />
-            </Route>
-          </Routes>
-          <Footer />
-=======
-            <Route path="dashboard" element={<Home />} />
-            <Route path="managementproduct" element={<ManagementProduct />} />
-            <Route path="myprofile" element={<MyProfile />} />
-<<<<<<< HEAD
-=======
-            <Route path="checkout" element={<CheckOut />} />
-            <Route path="prev" element={<Preview />} />
-
->>>>>>> a2358fb6473c7380920e78839b278449e616e96f
-            <Route path="dashboard" element={<Home products={products} />} />
-            <Route
-              path="/product/:id"
-              element={<ProductDetail products={products} />}/>
-             <Route path="shoppingcart" element={<ShoppingCart />} />
-          </Route>
-        </Routes>
-        <Footer />
->>>>>>> a3d0deb0ab4411643065510b59b4112f4f6277d8
+              <Route
+                path="/managementproduct"
+                element={<ManagementProduct />}
+              />
+              <Route path="/myprofile" element={<MyProfile />} />
+              <Route path="/checkout" element={<CheckOut />} />
+              <Route path="/checkoutTest" element={<CheckoutTest />} />
+              <Route path="/shoppingcart" element={<ShoppingCart />} />
+              <Route path="/prev" element={<Preview />} />
+              <Route path="/paymentProccess" element={<PaymentProcess />} />
+              <Route path="/paymentSuccess" element={<PaymentSuccess />} />
+              <Route path="/paymentFail" element={<PaymentFail />} />
+            </Routes>
+            <Footer />
+          </CartProvider>
         </AuthProvider>
       </BrowserRouter>
     </>

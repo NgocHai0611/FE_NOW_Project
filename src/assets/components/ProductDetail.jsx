@@ -1,36 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import "../css/ProductDetail.css";
 import "font-awesome/css/font-awesome.min.css";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "./Context/CartContext";
 
 export default function ProductDetail({ products }) {
+  const navigate = useNavigate();
   const { id } = useParams();
-  const product = products.find((item) => item.id === id);
-  const [quantity, setQuantity] = useState(1); // Trạng thái cho số lượng
+  const product = products.find((item) => item.idProduct === id);
 
-  if (!product) {
-    return <div>Product not found</div>;
-  }
+  const { handleIncreaseItem, handleDecreaseItem } = useCart();
 
-  const increaseQuantity = () => setQuantity(quantity + 1);
-  const decreaseQuantity = () => {
-    if (quantity > 1) setQuantity(quantity - 1);
-  };
-
-  
   return (
     <div className="product_detail_container">
       <div className="product_images">
-        <img src={product.img} alt={product.name} className="main_image" />
         <div className="thumbnail_images">
-          <img src={product.img} alt={product.name} className="thumbnail" />
-          <img src={product.img} alt={product.name} className="thumbnail" />
-          <img src={product.img} alt={product.name} className="thumbnail" />
+          <img
+            src={product.imgProduct}
+            alt={product.productName}
+            className="thumbnail"
+          />
         </div>
       </div>
       <div className="product_info">
-        <h2 className="product_title">{product.name}</h2>
-        <p className="product_price">${product.price}</p>
+        <h2 className="product_title">{product.productName}</h2>
+        <p className="product_price">${product.unitPrice}</p>
         <p className="product_description">{product.desc}</p>
 
         <div className="product_color">
@@ -76,15 +71,26 @@ export default function ProductDetail({ products }) {
 
         <div className="action_buttons">
           <div className="quantity_container">
-            <button onClick={decreaseQuantity} className="quantity_button">
+            <button
+              onClick={() => handleDecreaseItem(product.id)}
+              className="quantity_button"
+            >
               -
             </button>
-            <span className="quantity_display">{quantity}</span>
-            <button onClick={increaseQuantity} className="quantity_button">
+
+            <button
+              onClick={() => handleIncreaseItem(product)}
+              className="quantity_button"
+            >
               +
             </button>
           </div>
-          <button className="add_to_cart_button">Add to Cart</button>
+          <button
+            className="add_to_cart_button"
+            onClick={() => addToCart(product)}
+          >
+            Add to Cart
+          </button>
           <button className="favorite_button">
             <i className="fa fa-heart"></i>
           </button>

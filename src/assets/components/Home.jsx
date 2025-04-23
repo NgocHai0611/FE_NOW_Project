@@ -1,17 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import home_women from "../imgs/home_women.png";
-import { Link } from "react-router-dom"; 
-import '../css/home.css';
+import { Link } from "react-router-dom";
+import "../css/home.css";
+import { AuthContext } from "./AuthUtils/AuthContexts";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-  
-    fetch('https://6494e6aeb08e17c91791736d.mockapi.io/api/book/product')
-      .then(response => response.json())
-      .then(data => setProducts(data))
-      .catch(error => console.error('Error fetching data:', error));
+    console.log(user);
+
+    fetch("http://localhost:8000/products/listProduct")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setProducts(data);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
   return (
@@ -59,17 +65,25 @@ export default function Home() {
       <div className="bestsellers_container">
         <h2 className="bestsellers_title">Our Bestseller</h2>
         <div className="bestsellers_grid">
-          {products.map(product => (
-            <Link to={`/product/${product.id}`} className="product_card" key={product.id}>
-              <img src={product.img} alt={product.name} className="product_image" />
-              <h3 className="product_name">{product.name}</h3>
-              <p className="product_price">${product.price}</p>
+          {products.map((product) => (
+            <Link
+              to={`/product/${product.idProduct}`}
+              className="product_card"
+              key={product.id}
+            >
+              <img
+                src={product.imgProduct}
+                alt={product.productName}
+                className="product_image"
+              />
+              <h3 className="product_name">{product.productName}</h3>
+              <p className="product_price">${product.unitPrice}</p>
             </Link>
           ))}
         </div>
       </div>
 
-     <div className="customer_container">
+      <div className="customer_container">
         <div className="customer_title_container">
           <h2 className="customer_title">What our Customers Say</h2>
           <div className="customer_buttons">
@@ -81,7 +95,10 @@ export default function Home() {
         <div className="customer_feedback">
           <div className="feedback_item">
             <div className="feedback_rating">★★★★★</div>
-            <p className="feedback_text">It is a long established fact that a reader will be distracted bythe readable content of a page when looking at its layout</p>
+            <p className="feedback_text">
+              It is a long established fact that a reader will be distracted
+              bythe readable content of a page when looking at its layout
+            </p>
             <p className="feedback_author">Leslie Alexander, Model</p>
           </div>
           <div className="feedback_item">
@@ -109,19 +126,35 @@ export default function Home() {
         <div className="image_grid">
           <div className="image_item">
             <img src={home_women} alt="Instagram Story 1" />
-            <p>Free Shipping<br /><span>Free shipping for order above $150</span></p>
+            <p>
+              Free Shipping
+              <br />
+              <span>Free shipping for order above $150</span>
+            </p>
           </div>
           <div className="image_item">
             <img src={home_women} alt="Instagram Story 2" />
-            <p>Money Guarantee<br /><span>Within 30 days for an exchange</span></p>
+            <p>
+              Money Guarantee
+              <br />
+              <span>Within 30 days for an exchange</span>
+            </p>
           </div>
           <div className="image_item">
             <img src={home_women} alt="Instagram Story 3" />
-            <p>Online Support<br /><span>24 hours a day, 7 days a week</span></p>
+            <p>
+              Online Support
+              <br />
+              <span>24 hours a day, 7 days a week</span>
+            </p>
           </div>
           <div className="image_item">
             <img src={home_women} alt="Instagram Story 4" />
-            <p>Flexible Payment<br /><span>Pay with multiple credit cards</span></p>
+            <p>
+              Flexible Payment
+              <br />
+              <span>Pay with multiple credit cards</span>
+            </p>
           </div>
         </div>
       </div>
