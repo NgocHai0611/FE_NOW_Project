@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import '../css/managementproduct.css';
+import "../css/managementproduct.css";
 
 export default function ManagementProduct() {
   const [product, setProduct] = useState({
@@ -10,7 +10,7 @@ export default function ManagementProduct() {
     size: "",
     imgProduct: "",
   });
-
+  //
   const [products, setProducts] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -45,7 +45,11 @@ export default function ManagementProduct() {
       });
 
       if (response.ok) {
-        alert(isEditing ? "Cập nhật sản phẩm thành công!" : "Thêm sản phẩm thành công!");
+        alert(
+          isEditing
+            ? "Cập nhật sản phẩm thành công!"
+            : "Thêm sản phẩm thành công!"
+        );
         setProduct({
           idProduct: "",
           productName: "",
@@ -73,9 +77,12 @@ export default function ManagementProduct() {
   const handleDelete = async (idProduct) => {
     if (window.confirm("Bạn có chắc chắn muốn xoá sản phẩm này?")) {
       try {
-        const response = await fetch(`http://localhost:3001/deleteProduct/${idProduct}`, {
-          method: "DELETE",
-        });
+        const response = await fetch(
+          `http://localhost:3001/deleteProduct/${idProduct}`,
+          {
+            method: "DELETE",
+          }
+        );
 
         if (response.ok) {
           alert("Xoá sản phẩm thành công!");
@@ -96,29 +103,79 @@ export default function ManagementProduct() {
         <h2>{isEditing ? "Cập nhật sản phẩm" : "Thêm sản phẩm mới"}</h2>
         <form onSubmit={handleSubmit}>
           <label>Mã sản phẩm</label>
-          <input type="text" name="idProduct" value={product.idProduct} onChange={handleChange} required disabled={isEditing} />
+          <input
+            type="text"
+            name="idProduct"
+            value={product.idProduct}
+            onChange={handleChange}
+            required
+            disabled={isEditing}
+          />
 
           <label>Tên sản phẩm</label>
-          <input type="text" name="productName" value={product.productName} onChange={handleChange} required />
+          <input
+            type="text"
+            name="productName"
+            value={product.productName}
+            onChange={handleChange}
+            required
+          />
 
           <label>Giá</label>
-          <input type="number" name="unitPrice" value={product.unitPrice} onChange={handleChange} required />
+          <input
+            type="number"
+            name="unitPrice"
+            value={product.unitPrice}
+            onChange={handleChange}
+            required
+          />
 
           <label>Mô tả</label>
-          <textarea name="desc" value={product.desc} onChange={handleChange} required />
+          <textarea
+            name="desc"
+            value={product.desc}
+            onChange={handleChange}
+            required
+          />
 
           <label>Kích thước</label>
-          <textarea name="size" value={product.size} onChange={handleChange} required />
+          <textarea
+            name="size"
+            value={product.size}
+            onChange={handleChange}
+            required
+          />
 
           <label>Hình ảnh (URL)</label>
-          <input type="text" name="imgProduct" value={product.imgProduct} onChange={handleChange} required />
+          <input
+            type="text"
+            name="imgProduct"
+            value={product.imgProduct}
+            onChange={handleChange}
+            required
+          />
 
           <div className="form_buttons">
-            <button type="button" className="cancel_btn" onClick={() => {
-              setProduct({ idProduct: "", productName: "", unitPrice: "", desc: "", size: "", imgProduct: "" });
-              setIsEditing(false);
-            }}>Hủy</button>
-            <button type="submit" className="submit_btn">{isEditing ? "Cập nhật" : "Thêm sản phẩm"}</button>
+            <button
+              type="button"
+              className="cancel_btn"
+              onClick={() => {
+                setProduct({
+                  idProduct: "",
+                  productName: "",
+                  unitPrice: "",
+                  desc: "",
+                  size: "",
+                  imgProduct: "",
+                });
+                setIsEditing(false);
+              }}
+            >
+              Hủy
+            </button>
+            <button type="submit" className="submit_btn">
+              {isEditing ? "Cập nhật" : "Thêm sản phẩm"}
+            </button>
           </div>
         </form>
       </div>
@@ -141,15 +198,28 @@ export default function ManagementProduct() {
           <tbody>
             {products.map((prod) => (
               <tr key={prod.idProduct}>
-                <td><img src={prod.imgProduct} alt={prod.productName} width="50" /></td>
+                <td>
+                  <img
+                    src={prod.imgProduct}
+                    alt={prod.productName}
+                    width="50"
+                  />
+                </td>
                 <td>{prod.idProduct}</td>
                 <td>{prod.productName}</td>
                 <td>${prod.unitPrice.toFixed(2)}</td>
                 <td>{prod.desc}</td>
                 <td>{prod.size}</td>
                 <td>
-                  <button className="edit_btn" onClick={() => handleEdit(prod)}>Sửa</button>
-                  <button className="delete_btn" onClick={() => handleDelete(prod.idProduct)}>Xoá</button>
+                  <button className="edit_btn" onClick={() => handleEdit(prod)}>
+                    Sửa
+                  </button>
+                  <button
+                    className="delete_btn"
+                    onClick={() => handleDelete(prod.idProduct)}
+                  >
+                    Xoá
+                  </button>
                 </td>
               </tr>
             ))}
