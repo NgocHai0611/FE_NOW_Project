@@ -18,6 +18,7 @@ import Preview from "./assets/components/Preview";
 // Context
 import { AuthProvider } from "../src/assets/components/AuthUtils/AuthContexts";
 import { CartProvider } from "./assets/components/Context/CartContext";
+import { ProductsProvider } from "./assets/components/Context/ProductContext";
 
 // Payment
 import PaymentProcess from "./assets/components/Payments/Payment";
@@ -29,48 +30,33 @@ import CheckoutTest from "./assets/components/Payments/CheckOutTest";
 import ProtectedRoute from "./assets/components/ProtectedRoute/protectedRoute";
 
 function App() {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    fetch("http://localhost:8000/products/listProduct")
-      .then((response) => response.json())
-      .then((data) => setProducts(data))
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
-
   return (
     <>
       <BrowserRouter>
         <AuthProvider>
           <CartProvider>
-            <Header />
-            <Routes>
-              <Route path="/" element={<Navigate to="/login" />} />
-              <Route path="/login" element={<Auth />} />
-              <Route
-                path="/dashboard"
-                element={
-                    <Home products={products} />
-                }
-              />
-              <Route
-                path="/product/:id"
-                element={<ProductDetail products={products} />}
-              />
-              <Route
-                path="/managementproduct"
-                element={<ManagementProduct />}
-              />
-              <Route path="/myprofile" element={<MyProfile />} />
-              <Route path="/checkout" element={<CheckOut />} />
-              <Route path="/checkoutTest" element={<CheckoutTest />} />
-              <Route path="/shoppingcart" element={<ShoppingCart />} />
-              <Route path="/prev" element={<Preview />} />
-              <Route path="/paymentProccess" element={<PaymentProcess />} />
-              <Route path="/paymentSuccess" element={<PaymentSuccess />} />
-              <Route path="/paymentFail" element={<PaymentFail />} />
-            </Routes>
-            <Footer />
+            <ProductsProvider>
+              <Header />
+              <Routes>
+                <Route path="/" element={<Navigate to="/login" />} />
+                <Route path="/login" element={<Auth />} />
+                <Route path="/dashboard" element={<Home />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route
+                  path="/managementproduct"
+                  element={<ManagementProduct />}
+                />
+                <Route path="/myprofile" element={<MyProfile />} />
+                <Route path="/checkout" element={<CheckOut />} />
+                <Route path="/checkoutTest" element={<CheckoutTest />} />
+                <Route path="/shoppingcart" element={<ShoppingCart />} />
+                <Route path="/prev" element={<Preview />} />
+                <Route path="/paymentProccess" element={<PaymentProcess />} />
+                <Route path="/paymentSuccess" element={<PaymentSuccess />} />
+                <Route path="/paymentFail" element={<PaymentFail />} />
+              </Routes>
+              <Footer />
+            </ProductsProvider>
           </CartProvider>
         </AuthProvider>
       </BrowserRouter>

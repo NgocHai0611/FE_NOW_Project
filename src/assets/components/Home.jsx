@@ -3,22 +3,12 @@ import home_women from "../imgs/home_women.png";
 import { Link } from "react-router-dom";
 import "../css/home.css";
 import { AuthContext } from "./AuthUtils/AuthContexts";
+import { useProducts } from "./Context/ProductContext";
 
 export default function Home() {
-  const [products, setProducts] = useState([]);
+  const { products } = useProducts();
+  console.log("Products Trong Home : ", products);
   const { user } = useContext(AuthContext);
-
-  useEffect(() => {
-    console.log(user);
-
-    fetch("http://localhost:8000/products/listProduct")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setProducts(data);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
 
   return (
     <div className="home_container">
@@ -67,8 +57,9 @@ export default function Home() {
         <div className="bestsellers_grid">
           {products.map((product) => (
             <Link
-              to={`/product/${product.idProduct}`}
-              className="product_card"
+              to={{
+                pathname: `/product/${product.idProduct}`,
+              }}
               key={product.id}
             >
               <img

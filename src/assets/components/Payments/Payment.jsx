@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import QRCode from "react-qr-code";
+import Loading from "../Loading/Loading";
+import { AuthContext } from "../AuthUtils/AuthContexts";
+import { useCart } from "../Context/CartContext";
 
 const PaymentProcess = () => {
   const location = useLocation();
@@ -14,6 +17,63 @@ const PaymentProcess = () => {
 
   const [countdown, setCountdown] = useState(initialCountdown || 120); // Thời gian countdown là 2 phút (120 giây)
   const [isExpired, setIsExpired] = useState(false); // Trạng thái hết hạn
+  const [loading, setLoading] = useState(false);
+  const deliveryCharge = 5;
+
+  const {
+    cartItems,
+    clearCart,
+    handleIncreaseItem,
+    handleDecreaseItem,
+    removeFromCart,
+    setTotalPay,
+    totalPay,
+  } = useCart();
+
+  const { user } = useContext(AuthContext);
+
+  const subtotal = cartItems.reduce(
+    (acc, product) => acc + product.unitPrice * product.qty,
+    0
+  );
+  const grandTotal = subtotal - 0 + deliveryCharge;
+
+  // Hanlde Save Order
+  const handleSaveOrder = (status) => {
+    setLoading(true); // bắt đầu loading
+    const userID = user.id;
+    console.log(userID);
+
+    axios
+      .post("http://localhost/orders/saveOrder", {
+        cartItems,
+        userID,
+        grandTotal,
+        status,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        setLoading(false); // dừng loading nếu có lỗi
+        console.log(err);
+      });
+  };
+
+  const handleUpdateProduct = () => {
+    setLoading(true); // bắt đầu loading
+    axios
+      .post("http://localhost/products/update-stock", {
+        cartItems,
+      })
+      .then((res) => {
+        navigate("/dashboard");
+      })
+      .catch((err) => {
+        setLoading(false); // dừng loading nếu có lỗi
+        console.log(err);
+      });
+  };
 
   // useEffect 1: Countdown và ẩn mã QR sau 2 phút
   useEffect(() => {
@@ -42,6 +102,7 @@ const PaymentProcess = () => {
       };
     } else if (countdown === 0 && !isExpired) {
       setIsExpired(true); // Đặt trạng thái hết hạn khi countdown về 0
+      handleSaveOrder("PENDING");
       navigate("/paymentFail"); // Điều hướng ngay lập tức khi hết hạn
     }
   }, [qrData, countdown, isExpired, navigate]); // Đảm bảo useEffect này chạy lại khi countdown thay đổi
@@ -62,11 +123,16 @@ const PaymentProcess = () => {
 
           if (status === "PAID") {
             clearInterval(interval);
+            handleSaveOrder("PAID");
+            handleUpdateProduct();
+            clearCart(user.id);
             navigate(`/paymentSuccess?orderCode=${orderCode}&status=success`);
           }
 
           if (status === "EXPIRED" || isExpired) {
             clearInterval(interval);
+            handleSaveOrder("PENDING");
+            clearCart(user.id);
             navigate(`/paymentFail?orderCode=${orderCode}&status=fail`);
           }
         } catch (err) {
@@ -81,9 +147,38 @@ const PaymentProcess = () => {
 
   return (
     <div style={{ padding: 30 }}>
-      <h2>Thanh toán đơn hàng</h2>
-      <p>Sản phẩm: Mì tôm Hảo Hảo ly</p>
-      <p>Giá: 10.000 VND</p>
+      {cartItems.map((product) => (
+        <div key={product.id} className="product-item">
+          <div className="product-info product-column">
+            <img
+              src={product.imgProduct}
+              alt={product.productName}
+              className="product-image"
+            />
+            <div className="product-details">
+              <p className="product-name">{product.productName}</p>
+              {product.availableSizes && (
+                <select
+                  className="product-size"
+                  value={product.size}
+                  onChange={(e) => handleSizeChange(product.id, e.target.value)}
+                >
+                  {product.availableSizes.map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+          </div>
+          <p className="product-price price-column">
+            ${product.unitPrice.toFixed(2)}
+          </p>
+        </div>
+      ))}
+
+      {loading && <Loading />}
 
       {qrData && !isExpired && (
         <div style={{ marginTop: 20 }}>

@@ -133,6 +133,19 @@
   margin-top: -140px;
 }
 
+.container__totalItem {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  background-color: #131118;
+  border-radius: 50%;
+  top: 1%;
+  right: 9%;
+}
+
 /* .footer__icon--sendMail {
   position: absolute;
   margin-top: 8px;

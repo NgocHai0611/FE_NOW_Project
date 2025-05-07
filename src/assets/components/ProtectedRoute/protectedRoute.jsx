@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children }) => {
 
   // Nếu chưa xác định được user (null), có thể render loading
   if (user === undefined) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
   if (!user) {

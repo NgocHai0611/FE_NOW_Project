@@ -10,10 +10,13 @@ import ShoppingCart from "./ShoppingCart";
 import logo from "../imgs/logo.png";
 import { useContext, useState } from "react";
 import { AuthContext } from "./AuthUtils/AuthContexts";
+import { CartProvider, useCart } from "./Context/CartContext";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+  const { totalItem } = useCart();
 
   const [isOpen, setIsOpen] = useState(false);
   const toggleModal = () => {
@@ -30,9 +33,9 @@ export default function Header() {
         <img src={logo} alt="" className="header--logo" />
         <ul className="list__header--link">
           <li>
-            <a href="">
+            <Link to={`/dashboard`}>
               <p>Home</p>
-            </a>
+            </Link>
           </li>
           <li>
             <a href="">
@@ -66,6 +69,9 @@ export default function Header() {
           </li>
           <li onClick={toggleModal} style={{ cursor: "pointer" }}>
             <FontAwesomeIcon icon={faCartShopping} />
+            <div className="container__totalItem">
+              <p style={{ color: "white" }}>{totalItem}</p>
+            </div>
           </li>
         </ul>
 
@@ -73,7 +79,7 @@ export default function Header() {
 
         {user ? (
           <div>
-            <img src={user.avatar} alt="" className="avatar__login" />
+            <img src={user.pic} alt="" className="avatar__login" />
           </div>
         ) : (
           <button className="btn--login" onClick={toLogin}>

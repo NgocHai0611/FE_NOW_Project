@@ -1,16 +1,39 @@
-import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import "../css/ProductDetail.css";
 import "font-awesome/css/font-awesome.min.css";
-import { useNavigate } from "react-router-dom";
 import { useCart } from "./Context/CartContext";
+import { useProducts } from "./Context/ProductContext";
+import axios from "axios";
 
-export default function ProductDetail({ products }) {
+export default function ProductDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const product = products.find((item) => item.idProduct === id);
+  const [product, setProduct] = useState([]);
 
-  const { handleIncreaseItem, handleDecreaseItem } = useCart();
+  useEffect(() => {
+    axios
+      .get(`http://localhost/products/product/${id}`)
+      .then((res) => {
+        console.log("Respone tra ve ", res.data);
+        setProduct(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+
+  const { addToCart } = useCart();
+
+  // Số lượng hiển thị tạm thời trong component
+  const [quantity, setQuantity] = useState(1);
+
+  const handleAddProductToCart = (qtyStock) => {
+    addToCart(product, quantity); // Gọi hàm context thêm vào giỏ hàng
+    setQuantity(1); // Reset lại về 1
+  };
+
+  if (!product) return <div>Không tìm thấy sản phẩm</div>;
 
   return (
     <div className="product_detail_container">
@@ -25,7 +48,12 @@ export default function ProductDetail({ products }) {
       </div>
       <div className="product_info">
         <h2 className="product_title">{product.productName}</h2>
-        <p className="product_price">${product.unitPrice}</p>
+        <p
+          className="product_price"
+          style={{ fontSize: 36, width: "50%", marginLeft: 70 }}
+        >
+          Giá tiền: ${product.unitPrice}
+        </p>
         <p className="product_description">{product.desc}</p>
 
         <div className="product_color">
@@ -72,14 +100,14 @@ export default function ProductDetail({ products }) {
         <div className="action_buttons">
           <div className="quantity_container">
             <button
-              onClick={() => handleDecreaseItem(product.id)}
+              onClick={() => setQuantity(Math.max(1, quantity - 1))}
               className="quantity_button"
             >
               -
             </button>
-
+            <span className="quantity_display">{quantity}</span>
             <button
-              onClick={() => handleIncreaseItem(product)}
+              onClick={() => setQuantity(quantity + 1)}
               className="quantity_button"
             >
               +
@@ -87,13 +115,17 @@ export default function ProductDetail({ products }) {
           </div>
           <button
             className="add_to_cart_button"
-            onClick={() => addToCart(product)}
+            onClick={handleAddProductToCart}
           >
             Add to Cart
           </button>
           <button className="favorite_button">
             <i className="fa fa-heart"></i>
           </button>
+
+          <div>
+            <h1>Sản Phẩm Trong Kho Còn: {product.qtyStock}</h1>
+          </div>
         </div>
       </div>
     </div>

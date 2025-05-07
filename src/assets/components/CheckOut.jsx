@@ -1,42 +1,60 @@
-import { useState } from "react"; // Không cần import React ở React 17+
-
+import { useContext, useState } from "react";
 import "../css/checkout.css";
 import { FaTrash } from "react-icons/fa";
+import { useCart } from "./Context/CartContext";
+import { AuthContext } from "./AuthUtils/AuthContexts";
+import { useNavigate } from "react-router-dom";
+
+import axios from "axios";
+import Loading from "./Loading/Loading";
 
 export default function CheckOut() {
+  const {
+    cartItems,
+    handleIncreaseItem,
+    handleDecreaseItem,
+    removeFromCart,
+    setTotalPay,
+    totalPay,
+  } = useCart();
+
+  const { user } = useContext(AuthContext);
+
   const [discountCode, setDiscountCode] = useState("");
   const [discount, setDiscount] = useState(0);
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "Hieu Nhan ",
-      size: "S",
-      price: 100.0,
-      quantity: 1,
-      image: "https://th.bing.com/th/id/OIP.NJJC0T8dYoFsgExhJ5PnzgHaFE?w=213&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-      availableSizes: ["S", "M", "L"]
-    },
-    {
-      id: 2,
-      name: "Dai Loc",
-      size: "Regular",
-      price: 100.0,
-      quantity: 1,
-      image: "https://th.bing.com/th/id/R.be354a4580086fc5178de6e7b47435e7?rik=s3Wm8DE1hUq09g&riu=http%3a%2f%2fwww.john2031.com%2fpiper_j4_cub_coupe%2fg-afwh.jpg&ehk=vJXmOK9KFvKrXfbiGvOIJtXvC%2flbRBXqf1nUW6L5OJI%3d&risl=&pid=ImgRaw&r=0",
-      availableSizes: ["Regular", "Large"]
-    },
-    {
-      id: 3,
-      name: "Hong Danh",
-      size: "M",
-      price: 100.0,
-      quantity: 1,
-      image: "https://th.bing.com/th/id/OIP.vq9wmb2c_ZW8jChPDs4angHaFE?w=1024&h=702&rs=1&pid=ImgDetMain",
-      availableSizes: ["S", "M", "L"]
-    },
-  ]);
-
   const deliveryCharge = 5;
+  const [qrData, setQrData] = useState("");
+  const [orderCode, setOrderCode] = useState(null);
+  const [countdown, setCountdown] = useState(120); // Thời gian countdown là 2 phút (120 giây)
+  const [isExpired, setIsExpired] = useState(false); // Trạng thái hết hạn
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  // Handle Check Out
+  const handleCheckout = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3003/create-payment-link",
+        { grandTotal, cartItems }
+      );
+      setQrData(res.data.qrCode);
+      setOrderCode(res.data.orderCode);
+      setCountdown(120); // Reset countdown khi tạo mã QR mới
+      setIsExpired(false); // Đặt trạng thái hết hạn là false
+
+      // Chuyển sang trang PaymentProcess và truyền dữ liệu qua state
+      navigate("/paymentProccess", {
+        state: {
+          qrData: res.data.qrCode,
+          orderCode: res.data.orderCode,
+          countdown: 120,
+        },
+      });
+    } catch (err) {
+      console.error("Lỗi khi tạo mã QR", err);
+      alert("Không thể tạo mã QR.");
+    }
+  };
 
   const handleApplyDiscount = () => {
     if (discountCode.trim().toUpperCase() === "FLAT50") {
@@ -46,29 +64,10 @@ export default function CheckOut() {
     }
   };
 
-  const handleQuantityChange = (id, change) => {
-    setProducts((prevProducts) => {
-      return prevProducts
-        .map((product) =>
-          product.id === id ? { ...product, quantity: product.quantity + change } : product
-        )
-        .filter((product) => product.quantity > 0);
-    });
-  };
-
-  const handleRemoveProduct = (id) => {
-    setProducts((prevProducts) => prevProducts.filter((product) => product.id !== id));
-  };
-
-  const handleSizeChange = (id, newSize) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === id ? { ...product, size: newSize } : product
-      )
-    );
-  };
-
-  const subtotal = products.reduce((acc, product) => acc + product.price * product.quantity, 0);
+  const subtotal = cartItems.reduce(
+    (acc, product) => acc + product.unitPrice * product.qty,
+    0
+  );
   const grandTotal = subtotal - discount + deliveryCharge;
 
   return (
@@ -80,33 +79,57 @@ export default function CheckOut() {
         <span className="header-item-quantity-column">Quantity</span>
       </div>
       <div className="checkout-content">
-        {/* Danh sách sản phẩm */}
         <div className="checkout-products">
           <div className="product-list">
-            {products.map((product) => (
+            {cartItems.map((product) => (
               <div key={product.id} className="product-item">
                 <div className="product-info product-column">
-                  <img src={product.image} alt={product.name} className="product-image" />
+                  <img
+                    src={product.imgProduct}
+                    alt={product.productName}
+                    className="product-image"
+                  />
                   <div className="product-details">
-                    <p className="product-name">{product.name}</p>
-                    <select
-                      className="product-size"
-                      value={product.size}
-                      onChange={(e) => handleSizeChange(product.id, e.target.value)}
-                    >
-                      {product.availableSizes.map((size) => (
-                        <option key={size} value={size}>{size}</option>
-                      ))}
-                    </select>
+                    <p className="product-name">{product.productName}</p>
+                    {product.availableSizes && (
+                      <select
+                        className="product-size"
+                        value={product.size}
+                        onChange={(e) =>
+                          handleSizeChange(product.id, e.target.value)
+                        }
+                      >
+                        {product.availableSizes.map((size) => (
+                          <option key={size} value={size}>
+                            {size}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                   </div>
                 </div>
-                <p className="product-price price-column">${product.price.toFixed(2)}</p>
+                <p className="product-price price-column">
+                  ${product.unitPrice.toFixed(2)}
+                </p>
                 <div className="quantity-control quantity-column">
-                  <button className="quantity-button" onClick={() => handleQuantityChange(product.id, -1)}>-</button>
-                  <span>{product.quantity}</span>
-                  <button className="quantity-button" onClick={() => handleQuantityChange(product.id, 1)}>+</button>
+                  <button
+                    className="quantity-button"
+                    onClick={() => handleDecreaseItem(product.id)}
+                  >
+                    -
+                  </button>
+                  <span>{product.qty}</span>
+                  <button
+                    className="quantity-button"
+                    onClick={() => handleIncreaseItem(product)}
+                  >
+                    +
+                  </button>
                 </div>
-                <button className="delete-button" onClick={() => handleRemoveProduct(product.id)}>
+                <button
+                  className="delete-button"
+                  onClick={() => removeFromCart(product.id)}
+                >
                   <FaTrash />
                 </button>
               </div>
@@ -114,9 +137,11 @@ export default function CheckOut() {
           </div>
         </div>
 
-        {/* Phần thanh toán */}
+        {/* Thanh toán */}
         <div className="checkout-summary">
-          <h3 className="subtotal">Subtotal <span>${subtotal.toFixed(2)}</span></h3>
+          <h3 className="subtotal">
+            Subtotal <span>${subtotal.toFixed(2)}</span>
+          </h3>
           <div className="discount-section">
             <input
               type="text"
@@ -125,13 +150,22 @@ export default function CheckOut() {
               value={discountCode}
               onChange={(e) => setDiscountCode(e.target.value)}
             />
-            <button className="apply-button" onClick={handleApplyDiscount}>Apply</button>
+            <button className="apply-button" onClick={handleApplyDiscount}>
+              Apply
+            </button>
           </div>
-          <h3>Delivery Charge <span>${deliveryCharge.toFixed(2)}</span></h3>
-          <h2 className="total-amount">Grand Total <span>${grandTotal.toFixed(2)}</span></h2>
-          <button className="checkout-button">Proceed to Checkout</button>
+          <h2>
+            Delivery Charge <span>${deliveryCharge.toFixed(2)}</span>
+          </h2>
+          <h3 className="total-amount">
+            Grand Total <span>${grandTotal.toFixed(2)}</span>
+          </h3>
+          <button className="checkout-button" onClick={handleCheckout}>
+            Proceed to Checkout
+          </button>
         </div>
       </div>
+      {loading && <Loading />}
     </div>
   );
 }
