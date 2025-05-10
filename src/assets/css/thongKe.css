@@ -1,0 +1,100 @@
+body {
+  margin: 0;
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+.page-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+  padding: 32px;
+}
+
+.main-container {
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.chart-card {
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  min-height: 700px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: visible;
+}
+
+.chart-description {
+  color: #4a5568;
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.chart-container {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.chart-wrapper {
+  width: 100%;
+  max-width: 800px;
+  height: 400px;
+}
+
+canvas {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+/* Style cho legend dọc dưới biểu đồ */
+.chart-legend {
+  display: flex;
+  flex-direction: column; /* Đảm bảo các mục xếp dọc */
+  align-items: flex-start;
+  max-width: 800px; /* Tăng để chứa nhãn dài */
+  margin-top: 30px; /* Khoảng cách từ biểu đồ */
+  width: 100%;
+  overflow: visible;
+}
+
+.chart-legend .legend-items {
+  display: flex;
+  flex-direction: column; /* Đảm bảo các mục xếp dọc */
+  gap: 15px; /* Khoảng cách đều giữa các mục */
+  width: 100%;
+}
+
+.chart-legend .legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 16px !important;
+  color: #4a5568;
+  word-break: break-word;
+  white-space: normal;
+  line-height: 1.5;
+  max-width: 100%; /* Đảm bảo không bị cắt */
+  padding: 5px 10px; /* Thêm padding để đẹp hơn */
+}
+
+.chart-legend .legend-item span {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  display: inline-block;
+}
