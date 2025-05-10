@@ -6,7 +6,13 @@ import "../css/thongKe.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-const ChartLegend = ({ labels, data, percentages, backgroundColor, borderColor }) => {
+const ChartLegend = ({
+  labels,
+  data,
+  percentages,
+  backgroundColor,
+  borderColor,
+}) => {
   return (
     <div className="chart-legend">
       <div className="legend-items">
@@ -29,7 +35,15 @@ const ChartLegend = ({ labels, data, percentages, backgroundColor, borderColor }
 const ThongKe = () => {
   const [chartData, setChartData] = useState({
     labels: [],
-    datasets: [{ label: "Phân bổ sản phẩm", data: [], backgroundColor: [], borderColor: [], borderWidth: 1 }],
+    datasets: [
+      {
+        label: "Phân bổ sản phẩm",
+        data: [],
+        backgroundColor: [],
+        borderColor: [],
+        borderWidth: 1,
+      },
+    ],
   });
   const [percentages, setPercentages] = useState([]);
   const [years, setYears] = useState([]);
@@ -41,26 +55,38 @@ const ThongKe = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:3002/revenue/product/yearly", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://localhost:3002/revenue/product/yearly",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           const errorText = await response.text();
-          throw new Error(`Phản hồi không thành công: ${response.status} - ${errorText.slice(0, 50)}...`);
+          throw new Error(
+            `Phản hồi không thành công: ${response.status} - ${errorText.slice(
+              0,
+              50
+            )}...`
+          );
         }
 
         const contentType = response.headers.get("content-type");
         if (!contentType || !contentType.includes("application/json")) {
           const errorText = await response.text();
-          throw new Error(`Phản hồi không phải JSON: ${errorText.slice(0, 50)}...`);
+          throw new Error(
+            `Phản hồi không phải JSON: ${errorText.slice(0, 50)}...`
+          );
         }
 
         const { revenueByProductYear } = await response.json();
-        const availableYears = Object.keys(revenueByProductYear).sort().reverse();
+        const availableYears = Object.keys(revenueByProductYear)
+          .sort()
+          .reverse();
         setYears(availableYears);
         if (availableYears.length > 0) {
           setSelectedYear(availableYears[0]);
@@ -86,7 +112,9 @@ const ThongKe = () => {
 
     // Tính tổng doanh thu và phần trăm
     const total = data.reduce((sum, value) => sum + value, 0);
-    const calculatedPercentages = data.map((value) => (total > 0 ? (value / total) * 100 : 0));
+    const calculatedPercentages = data.map((value) =>
+      total > 0 ? (value / total) * 100 : 0
+    );
 
     const colors = labels.map((_, index) => {
       const hue = (index * 137.5) % 360;
@@ -124,8 +152,12 @@ const ThongKe = () => {
           label: function (context) {
             let label = context.label || "";
             const value = context.parsed || 0;
-            const total = context.dataset.data.reduce((sum, val) => sum + val, 0);
-            const percentage = total > 0 ? ((value / total) * 100).toFixed(2) : "0.00";
+            const total = context.dataset.data.reduce(
+              (sum, val) => sum + val,
+              0
+            );
+            const percentage =
+              total > 0 ? ((value / total) * 100).toFixed(2) : "0.00";
             if (label) label += ": ";
             label += `${value} VNĐ (${percentage}%)`;
             return label;
@@ -136,7 +168,8 @@ const ThongKe = () => {
         color: "black",
         formatter: (value, context) => {
           const total = context.dataset.data.reduce((sum, val) => sum + val, 0);
-          const percentage = total > 0 ? ((value / total) * 100).toFixed(2) : "0.00";
+          const percentage =
+            total > 0 ? ((value / total) * 100).toFixed(2) : "0.00";
           return `${percentage}%`;
         },
         font: {
@@ -169,11 +202,17 @@ const ThongKe = () => {
         )}
         <div className="chart-card">
           <div className="chart-container">
-            <div className="chart-wrapper"style={{ width: "450px", height: "450px" }}>
+            <div
+              className="chart-wrapper"
+              style={{ width: "450px", height: "450px" }}
+            >
               <Pie data={chartData} options={options} />
             </div>
           </div>
-          <p className="chart-description">Biểu đồ thể hiện doanh thu của từng sản phẩm trong năm {selectedYear}</p>
+          <p className="chart-description">
+            Biểu đồ thể hiện doanh thu của từng sản phẩm trong năm{" "}
+            {selectedYear}
+          </p>
           <ChartLegend
             labels={chartData.labels}
             data={chartData.datasets[0].data}
