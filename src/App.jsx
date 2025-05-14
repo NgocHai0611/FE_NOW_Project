@@ -26,6 +26,9 @@ import PaymentSuccess from "./assets/components/Payments/PaymentSuccess";
 import PaymentFail from "./assets/components/Payments/PaymentFail";
 import CheckoutTest from "./assets/components/Payments/CheckOutTest";
 
+
+// Thống kê
+import ThongKe from "./assets/components/ThongKe";
 //Route
 import ProtectedRoute from "./assets/components/ProtectedRoute/protectedRoute";
 
@@ -54,6 +57,7 @@ function App() {
                 <Route path="/paymentProccess" element={<PaymentProcess />} />
                 <Route path="/paymentSuccess" element={<PaymentSuccess />} />
                 <Route path="/paymentFail" element={<PaymentFail />} />
+                <Route path="/thong-ke" element={<ThongKe />} />
               </Routes>
               <Footer />
             </ProductsProvider>
