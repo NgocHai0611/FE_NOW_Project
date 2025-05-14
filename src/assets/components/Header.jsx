@@ -27,6 +27,11 @@ export default function Header() {
     e.preventDefault();
     navigate("/login");
   };
+
+  const handleToProfile = () => {
+    navigate("/myprofile");
+  };
+
   return (
     <div className="container__header">
       <div className="header">
@@ -78,7 +83,7 @@ export default function Header() {
         {console.log(user)}
 
         {user ? (
-          <div>
+          <div onClick={handleToProfile}>
             <img src={user.pic} alt="" className="avatar__login" />
           </div>
         ) : (
