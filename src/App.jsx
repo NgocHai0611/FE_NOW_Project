@@ -20,12 +20,14 @@ import { AuthProvider } from "../src/assets/components/AuthUtils/AuthContexts";
 import { CartProvider } from "./assets/components/Context/CartContext";
 import { ProductsProvider } from "./assets/components/Context/ProductContext";
 
+// Layout Router
+import LayoutRoutes from "./assets/components/LayoutRoutes";
+
 // Payment
 import PaymentProcess from "./assets/components/Payments/Payment";
 import PaymentSuccess from "./assets/components/Payments/PaymentSuccess";
 import PaymentFail from "./assets/components/Payments/PaymentFail";
 import CheckoutTest from "./assets/components/Payments/CheckOutTest";
-
 
 // Thống kê
 import ThongKe from "./assets/components/ThongKe";
@@ -39,27 +41,7 @@ function App() {
         <AuthProvider>
           <CartProvider>
             <ProductsProvider>
-              <Header />
-              <Routes>
-                <Route path="/" element={<Navigate to="/login" />} />
-                <Route path="/login" element={<Auth />} />
-                <Route path="/dashboard" element={<Home />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route
-                  path="/managementproduct"
-                  element={<ManagementProduct />}
-                />
-                <Route path="/myprofile" element={<MyProfile />} />
-                <Route path="/checkout" element={<CheckOut />} />
-                <Route path="/checkoutTest" element={<CheckoutTest />} />
-                <Route path="/shoppingcart" element={<ShoppingCart />} />
-                <Route path="/prev" element={<Preview />} />
-                <Route path="/paymentProccess" element={<PaymentProcess />} />
-                <Route path="/paymentSuccess" element={<PaymentSuccess />} />
-                <Route path="/paymentFail" element={<PaymentFail />} />
-                <Route path="/thong-ke" element={<ThongKe />} />
-              </Routes>
-              <Footer />
+              <LayoutRoutes></LayoutRoutes>
             </ProductsProvider>
           </CartProvider>
         </AuthProvider>

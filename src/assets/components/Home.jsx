@@ -56,20 +56,27 @@ export default function Home() {
         <h2 className="bestsellers_title">Our Bestseller</h2>
         <div className="bestsellers_grid">
           {products.map((product) => (
-            <Link
-              to={{
-                pathname: `/product/${product.idProduct}`,
-              }}
-              key={product.id}
-            >
-              <img
-                src={product.imgProduct}
-                alt={product.productName}
-                className="product_image"
-              />
-              <h3 className="product_name">{product.productName}</h3>
-              <p className="product_price">${product.unitPrice}</p>
-            </Link>
+            <div className="product_card" key={product.id}>
+              <Link
+                to={`/product/${product.idProduct}`}
+                className="product_link"
+              >
+                <div className="product_content">
+                  <h3 className="product_name" title={product.productName}>
+                    {product.productName}
+                  </h3>
+                  <img
+                    src={product.imgProduct}
+                    alt={product.productName}
+                    className="product_image"
+                  />
+                  <p className="item__product--price">
+                    <span>Price:</span>
+                    <span className="price_value">${product.unitPrice}</span>
+                  </p>
+                </div>
+              </Link>
+            </div>
           ))}
         </div>
       </div>

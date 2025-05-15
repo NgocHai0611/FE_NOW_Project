@@ -3,7 +3,7 @@ import "../css/checkout.css";
 import { FaTrash } from "react-icons/fa";
 import { useCart } from "./Context/CartContext";
 import { AuthContext } from "./AuthUtils/AuthContexts";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import Loading from "./Loading/Loading";
@@ -29,6 +29,11 @@ export default function CheckOut() {
   const [isExpired, setIsExpired] = useState(false); // Trạng thái hết hạn
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const location = useLocation(); // Thêm dòng này
+
+  const { statusOrder, orderUpdate } = location.state || {};
+
+  console.log("Order Update ", orderUpdate);
 
   // Handle Check Out
   const handleCheckout = async () => {
@@ -48,6 +53,8 @@ export default function CheckOut() {
           qrData: res.data.qrCode,
           orderCode: res.data.orderCode,
           countdown: 120,
+          statusOrder,
+          orderUpdate,
         },
       });
     } catch (err) {

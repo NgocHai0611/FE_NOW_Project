@@ -13,6 +13,8 @@ const PaymentProcess = () => {
     qrData,
     orderCode,
     countdown: initialCountdown,
+    statusOrder,
+    orderUpdate,
   } = location.state || {};
 
   const [countdown, setCountdown] = useState(initialCountdown || 120); // Thời gian countdown là 2 phút (120 giây)
@@ -37,6 +39,31 @@ const PaymentProcess = () => {
     0
   );
   const grandTotal = subtotal - 0 + deliveryCharge;
+
+  // Handle Edit Order
+  const handleUpdateOrder = (status) => {
+    setLoading(true); // bắt đầu loading
+    const userID = user.id;
+    console.log(userID);
+
+    console.log("Dang Thuc Hien Update Order ");
+
+    axios
+      .post("http://localhost/orders/updateOrder", {
+        items: cartItems,
+        userID,
+        orders: orderUpdate,
+        status,
+        grandTotal,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        setLoading(false); // dừng loading nếu có lỗi
+        console.log(err);
+      });
+  };
 
   // Hanlde Save Order
   const handleSaveOrder = (status) => {
@@ -102,8 +129,12 @@ const PaymentProcess = () => {
       };
     } else if (countdown === 0 && !isExpired) {
       setIsExpired(true); // Đặt trạng thái hết hạn khi countdown về 0
-      handleSaveOrder("PENDING");
-      navigate("/paymentFail"); // Điều hướng ngay lập tức khi hết hạn
+      if (statusOrder && orderUpdate) {
+        navigate("/paymentFail");
+      } else {
+        handleSaveOrder("PENDING");
+        navigate("/paymentFail"); // Điều hướng ngay lập tức khi hết hạn
+      }
     }
   }, [qrData, countdown, isExpired, navigate]); // Đảm bảo useEffect này chạy lại khi countdown thay đổi
 
@@ -123,8 +154,14 @@ const PaymentProcess = () => {
 
           if (status === "PAID") {
             clearInterval(interval);
-            handleSaveOrder("PAID");
-            handleUpdateProduct();
+            if (statusOrder && orderUpdate) {
+              handleUpdateOrder("PAID");
+              handleUpdateProduct();
+            } else {
+              handleSaveOrder("PAID");
+              handleUpdateProduct();
+            }
+
             clearCart(user.id);
             navigate(`/paymentSuccess?orderCode=${orderCode}&status=success`);
           }

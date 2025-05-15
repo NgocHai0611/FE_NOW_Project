@@ -75,322 +75,444 @@
   padding: 20px;
 }
 
-
-
 .content p {
   color: gray;
   margin-top: 10px;
 }
 .profile-container {
-display: flex;
-align-items: flex-start;
-width: 85.3%;
-margin: auto;
-gap: 20px;
+  display: flex;
+  align-items: flex-start;
+  width: 85.3%;
+  margin: auto;
+  gap: 20px;
 }
 
 .sidebar {
-width: 25%;
-background: #f8f8f8;
-padding: 20px;
-border-radius: 8px;
+  width: 25%;
+  background: #f8f8f8;
+  padding: 20px;
+  border-radius: 8px;
 }
 
 .content {
-flex: 1;
-background: #fff;
-padding: 20px;
-border-radius: 8px;
-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .personal-info {
-display: flex;
-flex-direction: column;
-gap: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 .header {
-display: flex;
-justify-content: space-between;
-align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .profile-picture-update {
-display: flex;
-align-items: center;
-gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .form-row {
-display: flex;
-justify-content: space-between;
-gap: 250px; /* Điều chỉnh khoảng cách giữa các ô */
+  display: flex;
+  justify-content: space-between;
+  gap: 250px; /* Điều chỉnh khoảng cách giữa các ô */
 }
 
 .form-group {
-flex: 1;
+  flex: 1;
 }
 
 .full-width {
-width: 100%;
+  width: 100%;
 }
-.edit-profile{
-padding: 15px;
-border-radius: 10px;
-color: #fff;
-background-color: #000;
+.edit-profile {
+  padding: 15px;
+  border-radius: 10px;
+  color: #fff;
+  background-color: #000;
 }
 .manage-addresses {
-padding: 20px;
+  padding: 20px;
 }
 
 .add-address {
-background-color: #000;
-color: #fff;
-border: none;
-padding: 10px 15px;
-border-radius: 5px;
-font-size: 16px;
-cursor: pointer;
-display: flex;
-align-items: center;
-gap: 5px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .add-address:hover {
-background-color: #333;
+  background-color: #333;
 }
 
 .address-list {
-margin-top: 20px;
+  margin-top: 20px;
 }
 
 .address-item {
-display: flex;
-justify-content: space-between;
-align-items: center;
-background: #f8f8f8;
-padding: 15px;
-border-radius: 8px;
-margin-bottom: 10px;
-transition: 0.3s ease-in-out;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f8f8;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: 0.3s ease-in-out;
 }
 
 .address-item:hover {
-background: #ececec;
+  background: #ececec;
 }
 
 .address-info h3 {
-margin: 0;
-font-size: 18px;
+  margin: 0;
+  font-size: 18px;
 }
 
 .address-info p {
-margin: 5px 0;
-color: #666;
-font-size: 14px;
-display: flex;
-align-items: center;
-gap: 5px;
+  margin: 5px 0;
+  color: #666;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .address-actions {
-display: flex;
-gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .edit-btn,
 .delete-btn {
-border: none;
-padding: 8px 12px;
-border-radius: 5px;
-font-size: 14px;
-display: flex;
-align-items: center;
-gap: 5px;
-cursor: pointer;
-transition: 0.3s ease;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: 0.3s ease;
 }
 
 .edit-btn {
-background-color: #f1f1f1;
-color: #333;
+  background-color: #f1f1f1;
+  color: #333;
 }
 
 .edit-btn:hover {
-background-color: #ddd;
+  background-color: #ddd;
 }
 
 .delete-btn {
-background-color: #ffe5e5;
-color: #ff4d4d;
+  background-color: #ffe5e5;
+  color: #ff4d4d;
 }
 
 .delete-btn:hover {
-background-color: #ffcccc;
+  background-color: #ffcccc;
 }
 .address-form {
-background: white;
-padding: 20px;
-border-radius: 8px;
-box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-width: 100%;
-max-width: 400px;
-display: flex;
-flex-direction: column;
-gap: 12px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .address-form input {
-width: 100%;
-padding: 12px;
-border: 1px solid #ddd;
-border-radius: 6px;
-font-size: 16px;
-transition: all 0.3s ease;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: all 0.3s ease;
 }
 
 .address-form input:focus {
-border-color: #6c5ce7;
-box-shadow: 0 0 5px rgba(108, 92, 231, 0.5);
-outline: none;
+  border-color: #6c5ce7;
+  box-shadow: 0 0 5px rgba(108, 92, 231, 0.5);
+  outline: none;
 }
 
 .address-form button {
-padding: 12px;
-border: none;
-border-radius: 6px;
-font-size: 16px;
-cursor: pointer;
-background-color: #000000;
-color: white;
-transition: all 0.3s ease;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #000000;
+  color: white;
+  transition: all 0.3s ease;
 }
 
 .address-form button:hover {
-background-color: #000000;
+  background-color: #000000;
 }
 
 .saved-cards .card-item {
-display: flex;
-align-items: center;
-background: #fff;
-padding: 12px;
-border-radius: 8px;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-margin-bottom: 12px;
-width: 100%; /* Để card kéo dài theo chiều ngang */
-max-width: 450px; /* Giữ kích thước hợp lý */
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
+  width: 100%; /* Để card kéo dài theo chiều ngang */
+  max-width: 450px; /* Giữ kích thước hợp lý */
 }
 
 .card-left {
-margin-right: 12px;
+  margin-right: 12px;
 }
 
 .card-image {
-width: 60px;
-height: 40px;
-object-fit: cover;
-border-radius: 6px;
+  width: 60px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
 }
 
 .card-info {
-flex: 1; /* Cho phép card-info mở rộng */
+  flex: 1; /* Cho phép card-info mở rộng */
 }
 
 .delete-btn {
-background: #ff4d4d;
-color: white;
-border: none;
-padding: 6px 12px;
-border-radius: 6px;
-cursor: pointer;
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 .delete-btn:hover {
-background: #e60000;
+  background: #e60000;
 }
 
-
-
-
-
 .settings {
-flex: 1; /* Cho phép khu vực cài đặt mở rộng tối đa */
-padding: 20px;
-background: white;
-border-radius: 10px;
+  flex: 1; /* Cho phép khu vực cài đặt mở rộng tối đa */
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
 }
 
 .setting-item {
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 16px 0;
-border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #ddd;
 }
 
 .setting-item h3 {
-font-size: 16px;
-font-weight: 600;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .setting-item p {
-font-size: 14px;
-color: #777;
+  font-size: 14px;
+  color: #777;
 }
 
 .select-box {
-padding: 6px 12px;
-border: 1px solid #ddd;
-border-radius: 6px;
-font-size: 14px;
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
 }
 
 /* Toggle Switch */
 .switch {
-position: relative;
-display: inline-block;
-width: 40px;
-height: 20px;
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
 }
 
 .switch input {
-opacity: 0;
-width: 0;
-height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .slider {
-position: absolute;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-background-color: #ccc;
-border-radius: 20px;
-transition: 0.4s;
-} 
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 20px;
+  transition: 0.4s;
+}
 
 .slider:before {
-position: absolute;
-content: "";
-height: 14px;
-width: 14px;
-left: 3px;
-bottom: 3px;
-background-color: white;
-border-radius: 50%;
-transition: 0.4s;
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
-background-color: #4caf50;
+  background-color: #4caf50;
+}
+
+.avatar__edit {
+  width: 80px;
+  height: 80px;
 }
 
 input:checked + .slider:before {
-transform: translateX(20px);
+  transform: translateX(20px);
 }
 
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 6px;
+}
 
+.status-badge.delivered {
+  background-color: #e6f9ec;
+  color: #2e8b57;
+}
+
+.status-badge.in-process {
+  background-color: #fff8e1;
+  color: #f4b400;
+}
+
+.status-text {
+  font-size: 13px;
+  color: #555;
+  margin-top: 4px;
+}
+
+.order-right {
+  text-align: right;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.button-group button {
+  margin-left: 8px;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  transition: 0.3s;
+}
+
+.view-btn {
+  background: white;
+}
+
+.review-btn {
+  background-color: black;
+  color: white;
+  border: none;
+}
+
+.cancel-btn {
+  background-color: #f87171;
+  color: white;
+  border: none;
+}
+
+.cancel-btn:hover,
+.review-btn:hover {
+  opacity: 0.9;
+}
+
+.scroll-area {
+  max-height: 500px; /* hoặc bạn chọn chiều cao phù hợp */
+  overflow-y: auto;
+  border: 1px solid #eee;
+  padding: 10px;
+}
+
+/* Có thể tuỳ chỉnh thêm giao diện cuộn */
+.scroll-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-area::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.orders-container {
+  padding: 30px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: sans-serif;
+}
+
+.order-card {
+  border-bottom: 1px solid #ccc;
+  padding: 20px 0;
+}
+
+.order-header {
+  justify-content: space-between;
+  display: flex;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+
+  border-bottom: 1px solid #eee;
+}
+
+.btn--process {
+  width: 130px;
+  height: 40px;
+  border-radius: 10px;
+  color: white;
+}
+
+.payment-btn {
+  background-color: #000000;
+}
+
+.payment-btn:hover {
+  background-color: white;
+  color: black;
+}

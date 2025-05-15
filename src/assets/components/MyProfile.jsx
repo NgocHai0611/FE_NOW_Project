@@ -16,11 +16,26 @@ import { useEffect } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthUtils/AuthContexts";
 import { useContext } from "react";
+import { useProducts } from "./Context/ProductContext";
+import { useCart } from "./Context/CartContext";
+import { useNavigate } from "react-router-dom";
 
 export default function MyProfile() {
   const [selectedTab, setSelectedTab] = useState("My Orders");
   const { user } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
+  const { products } = useProducts();
+  const {
+    cartItems,
+    setCartItems,
+    handleIncreaseItem,
+    handleDecreaseItem,
+    removeFromCart,
+    setTotalPay,
+    totalPay,
+  } = useCart();
+  const navigate = useNavigate();
+
   const [addresses, setAddresses] = useState([
     {
       id: 1,
@@ -90,6 +105,31 @@ export default function MyProfile() {
     }
   };
 
+  const handleUpdateOrder = (order) => {
+    console.log("Order Update ", order);
+    const newCartItems = order.orderDetails.map((detail) => {
+      console.log(detail);
+
+      const product = products.find((p) => p.idProduct === detail.productID);
+
+      return {
+        id: product?.id || detail.productID, // dùng id thực nếu có
+        productName: detail.nameProduct,
+        unitPrice: detail.unitPrice,
+        qty: detail.qty,
+        imgProduct: product?.imgProduct || null,
+      };
+    });
+
+    setCartItems(newCartItems); // hoặc updateLocalStorage(newCartItems
+    navigate("/checkout", {
+      state: {
+        statusOrder: "update",
+        orderUpdate: order,
+      },
+    });
+  };
+
   const menuItems = [
     { name: "Personal Information", icon: <FiUser /> },
     { name: "My Orders", icon: <FiShoppingBag /> },
@@ -104,12 +144,13 @@ export default function MyProfile() {
     axios
       .get(`http://localhost/orders/${user.id}`)
       .then((res) => {
+        console.log(res.data);
         setOrders(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  });
+  }, []);
 
   return (
     <div className="profile-container">
@@ -117,7 +158,7 @@ export default function MyProfile() {
       <div className="sidebar">
         <h2>My Profile</h2>
         <div className="profile-picture">
-          <img src="https://via.placeholder.com/100" alt="Profile" />
+          <img src={user.pic} alt="Profile" />
           <button className="change-photo">
             <FiUser />
           </button>
@@ -140,11 +181,12 @@ export default function MyProfile() {
 
       {/* Content Area */}
       <div className="content">
+        {/* Edit Profile */}
         {selectedTab === "Personal Information" && (
           <div className="personal-info">
             <div className="header">
               <div className="profile-picture-update">
-                <img src="https://via.placeholder.com/100" alt="Profile" />
+                <img src={user.pic} alt="Profile" className="avatar__edit" />
                 <button className="change-photo">Change Photo</button>
               </div>
               <button className="edit-profile">Edit Profile</button>
@@ -338,6 +380,106 @@ export default function MyProfile() {
                 <input type="checkbox" checked />
                 <span className="slider"></span>
               </label>
+            </div>
+          </div>
+        )}
+
+        {selectedTab === "My Orders" && (
+          <div>
+            <div className="scroll-area">
+              <div className="orders-container">
+                {orders.map((order) => (
+                  <div key={order.orderID} className="order-card">
+                    <div className="order-header">
+                      <div className="order__header--info">
+                        <p>
+                          <strong>Ngày Đặt Hàng:</strong>{" "}
+                          {new Date(order.orderDate).toLocaleDateString()}
+                        </p>
+                        <p>
+                          <strong>Tổng Tiền :</strong>{" "}
+                          {order.total.toLocaleString()} VND
+                        </p>
+                        <p>
+                          <strong>Status:</strong> {order.status}
+                        </p>
+                      </div>
+
+                      <div className="order__btn--process">
+                        {order.status === "PENDING" &&
+                          (() => {
+                            const orderDate = new Date(order.orderDate);
+                            const now = new Date();
+                            const timeDiff = now - orderDate;
+                            const daysDiff = timeDiff / (1000 * 60 * 60 * 24); // tính số ngày chênh lệch
+
+                            return (
+                              <div style={{ marginTop: "10px" }}>
+                                <button
+                                  className="btn--process payment-btn"
+                                  onClick={() => handleUpdateOrder(order)}
+                                >
+                                  Thanh Toán
+                                </button>
+                                {daysDiff <= 3 && (
+                                  <button className="cancel-btn">
+                                    Cancel Order
+                                  </button>
+                                )}
+                              </div>
+                            );
+                          })()}
+                      </div>
+                    </div>
+
+                    {order.orderDetails.map((item) => {
+                      const product = products.find(
+                        (p) => p.idProduct === item.productID
+                      );
+
+                      return (
+                        <div
+                          key={item.idOrderDetails}
+                          className="order-item"
+                          style={{ display: "flex", marginBottom: "10px" }}
+                        >
+                          {product ? (
+                            <img
+                              src={product.imgProduct}
+                              alt={item.nameProduct}
+                              style={{
+                                width: "80px",
+                                height: "80px",
+                                objectFit: "cover",
+                                marginRight: "10px",
+                                borderRadius: "5px",
+                              }}
+                            />
+                          ) : (
+                            <div
+                              style={{
+                                width: "80px",
+                                height: "80px",
+                                background: "#eee",
+                                marginRight: "10px",
+                              }}
+                            />
+                          )}
+                          <div>
+                            <p>
+                              <strong>{item.nameProduct}</strong>
+                            </p>
+                            <p>
+                              Qty: {item.qty} | Unit Price:{" "}
+                              {item.unitPrice.toLocaleString()} VND
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}

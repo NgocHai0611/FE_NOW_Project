@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const { totalItem } = useCart();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -25,6 +25,12 @@ export default function Header() {
 
   const toLogin = async (e) => {
     e.preventDefault();
+    navigate("/login");
+  };
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    logout();
     navigate("/login");
   };
 
@@ -78,9 +84,11 @@ export default function Header() {
             <FontAwesomeIcon icon={faHeart} />
           </li>
           <li onClick={toggleModal} style={{ cursor: "pointer" }}>
-            <FontAwesomeIcon icon={faCartShopping} />
-            <div className="container__totalItem">
-              <p style={{ color: "white" }}>{totalItem}</p>
+            <div className="cart-icon-container">
+              <FontAwesomeIcon icon={faCartShopping} />
+              <div className="container__totalItem">
+                <p>{totalItem}</p>
+              </div>
             </div>
           </li>
         </ul>
@@ -88,8 +96,14 @@ export default function Header() {
         {console.log(user)}
 
         {user ? (
-          <div onClick={handleToProfile}>
-            <img src={user.pic} alt="" className="avatar__login" />
+          <div className="layout__user">
+            <img
+              src={user.pic}
+              alt=""
+              className="avatar__login"
+              onClick={handleToProfile}
+            />
+            <button onClick={handleLogout}>Đăng Xuất</button>
           </div>
         ) : (
           <button className="btn--login" onClick={toLogin}>
