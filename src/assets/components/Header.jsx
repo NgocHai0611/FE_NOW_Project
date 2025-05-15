@@ -69,11 +69,13 @@ export default function Header() {
               <p>Contact Us</p>
             </a>
           </li>
-          <li>
-            <Link to="/thong-ke">
-              <p>Thống kê</p>
-            </Link>
-          </li>
+          {user?.isAdmin === true && (
+            <li>
+              <Link to="/revenue">
+                <p>Revenue</p>
+              </Link>
+            </li>
+          )}
         </ul>
 
         <ul className="list__header--icon">

@@ -5,6 +5,7 @@ import QRCode from "react-qr-code";
 import Loading from "../Loading/Loading";
 import { AuthContext } from "../AuthUtils/AuthContexts";
 import { useCart } from "../Context/CartContext";
+import "../../css/paymentProcess.css";
 
 const PaymentProcess = () => {
   const location = useLocation();
@@ -93,9 +94,7 @@ const PaymentProcess = () => {
       .post("http://localhost/products/update-stock", {
         cartItems,
       })
-      .then((res) => {
-        navigate("/dashboard");
-      })
+      .then((res) => {})
       .catch((err) => {
         setLoading(false); // dừng loading nếu có lỗi
         console.log(err);
@@ -209,6 +208,7 @@ const PaymentProcess = () => {
               )}
             </div>
           </div>
+          <p className="product-qty">Quantity : {product.qty}</p>
           <p className="product-price price-column">
             ${product.unitPrice.toFixed(2)}
           </p>
@@ -219,8 +219,8 @@ const PaymentProcess = () => {
 
       {qrData && !isExpired && (
         <div style={{ marginTop: 20 }}>
-          <h4>Quét mã QR để thanh toán</h4>
-          <p>Còn lại: {countdown} giây</p>
+          <h4>Scan QR To Payment</h4>
+          <p>Time Expire: {countdown} sec</p>
           <div style={{ background: "white", padding: 16 }}>
             <QRCode value={qrData} size={256} />
           </div>

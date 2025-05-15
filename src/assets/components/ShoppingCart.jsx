@@ -17,7 +17,7 @@ const ShoppingCart = ({ onClose }) => {
         <div className="headline__sidebar">
           <h3>Shopping Cart</h3>
           <button className="close-button" onClick={onClose}>
-            Close
+            X
           </button>
         </div>
 

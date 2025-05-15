@@ -27,12 +27,11 @@
 }
 
 .list__header--link {
-  width: 60%;
+  width: 90%;
   display: flex;
   list-style: none;
   justify-content: space-between;
   margin-left: 15%;
-  margin-right: 9%;
 }
 
 .avatar__login {
