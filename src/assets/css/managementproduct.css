@@ -1,116 +1,275 @@
 .home_container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 50px;
-}
-
-.form_container {
-    width: 500px;
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-}
-
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-label {
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-textarea {
-    resize: vertical;
-    height: 100px;
-}
-
-.form_buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.cancel_btn {
-    background: #f0f0f0;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.submit_btn {
-    background: black;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  padding: 0 20px;
 }
 
 .table_container {
-    width: 80%;
-    margin-top: 20px;
+  width: 80%;
+  margin-top: 20px;
+}
+
+.table_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.table_header h2 {
+  margin: 0;
+}
+
+.add_product_btn {
+  padding: 10px 20px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.add_product_btn:hover {
+  opacity: 0.8;
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: center;
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
 }
 
-th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
 }
 
 th {
-    background-color: #f4f4f4;
+  background-color: #f4f4f4;
 }
 
 td img {
-    display: block;
-    margin: 0 auto;
-    max-width: 50px;
-    height: auto;
+  display: block;
+  margin: 0 auto;
+  max-width: 50px;
+  height: auto;
 }
 
-.edit_btn, .delete_btn {
-    padding: 5px 10px;
-    margin: 2px;
-    border: none;
-    cursor: pointer;
+.edit_btn,
+.delete_btn {
+  padding: 5px 10px;
+  margin: 2px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit_btn {
+  background-color: #ffa500;
+  color: white;
+}
+
+.delete_btn {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.edit_btn:hover,
+.delete_btn:hover {
+  opacity: 0.8;
+}
+
+.error_message {
+  color: red;
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 10px 0;
+}
+
+/* Modal styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.modal.show {
+  opacity: 1;
+}
+
+.modal_content {
+  background: #fff;
+  padding: 30px; /* Increased padding for better spacing */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 90%; /* Responsive width */
+  max-height: 85vh; /* Slightly taller to accommodate content */
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content for balance */
+}
+
+.close_btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.2s ease;
+}
+
+.close_btn:hover {
+  color: #000;
+}
+
+.modal_content h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.8rem; /* Consistent heading size */
+  color: #333;
+}
+
+.modal_content form {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Ensure form takes full width of modal */
+  gap: 15px; /* Consistent spacing between form elements */
+}
+
+.modal_content label {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #333;
+}
+
+.modal_content input,
+.modal_content textarea {
+  width: 100%;
+  padding: 12px; /* Slightly larger padding for better UX */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Ensure padding doesn’t affect width */
+}
+
+.modal_content textarea {
+  resize: vertical;
+  min-height: 100px;
+  max-height: 200px; /* Prevent excessive resizing */
+}
+
+.modal_content input[type="file"] {
+  padding: 8px; /* Adjusted for file input */
+  border: none; /* Remove border for file input */
+}
+
+.preview_image {
+  max-width: 150px; /* Slightly larger but constrained */
+  height: auto;
+  margin: 10px auto; /* Center image */
+  display: block;
+  border-radius: 5px; /* Add slight rounding */
+}
+
+.form_buttons {
+  display: flex;
+  justify-content: center; /* Center buttons for balance */
+  gap: 15px; /* Consistent spacing between buttons */
+  margin-top: 20px;
+}
+
+.submit_btn,
+.cancel_btn {
+  padding: 12px 30px; /* Larger buttons for better clickability */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.submit_btn {
+  background: #000;
+  color: white;
+}
+
+.submit_btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.cancel_btn {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.cancel_btn:disabled {
+  background: #ddd;
+  cursor: not-allowed;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .modal_content {
+    max-width: 95%;
+    padding: 20px; /* Slightly less padding */
   }
-  
-  .edit_btn {
-    background-color: #ffa500;
-    color: white;
+
+  .modal_content h2 {
+    font-size: 1.5rem; /* Smaller heading */
   }
-  
-  .delete_btn {
-    background-color: #ff4d4d;
-    color: white;
+
+  .modal_content input,
+  .modal_content textarea {
+    padding: 10px;
+    font-size: 0.9rem; /* Slightly smaller text */
   }
-  
-  .edit_btn:hover, .delete_btn:hover {
-    opacity: 0.8;
+
+  .submit_btn,
+  .cancel_btn {
+    padding: 10px 20px; /* Smaller buttons */
   }
-  
+}
+
+@media (max-width: 480px) {
+  .modal_content {
+    padding: 15px;
+  }
+
+  .modal_content h2 {
+    font-size: 1.3rem;
+  }
+
+  .preview_image {
+    max-width: 120px; /* Smaller preview image */
+  }
+
+  .form_buttons {
+    flex-direction: column; /* Stack buttons on very small screens */
+    gap: 10px;
+  }
+
+  .submit_btn,
+  .cancel_btn {
+    width: 100%; /* Full-width buttons */
+    padding: 10px;
+  }
+}

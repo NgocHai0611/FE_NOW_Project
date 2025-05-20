@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import "../css/myprofile.css";
 import {
   FiSettings,
@@ -12,19 +12,17 @@ import {
   FiPhone,
   FiCreditCard,
 } from "react-icons/fi";
-
-import { FaUsers } from "react-icons/fa";
 import { useEffect } from "react";
+import { FaUsers } from "react-icons/fa";
 import axios from "axios";
 import { AuthContext } from "./AuthUtils/AuthContexts";
-import { useContext } from "react";
 import { useProducts } from "./Context/ProductContext";
 import { useCart } from "./Context/CartContext";
 import { useNavigate } from "react-router-dom";
 
 export default function MyProfile() {
   const [selectedTab, setSelectedTab] = useState("My Orders");
-  const { user } = useContext(AuthContext);
+  const { user, login } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
@@ -40,7 +38,6 @@ export default function MyProfile() {
     totalPay,
   } = useCart();
   const navigate = useNavigate();
-  const [orderUpdate, setOrderUpdate] = useState([]);
 
   const [addresses, setAddresses] = useState([
     {
@@ -115,11 +112,9 @@ export default function MyProfile() {
     console.log("Order Update ", order);
     const newItemsUpdate = order.orderDetails.map((detail) => {
       console.log(detail);
-
       const product = products.find((p) => p.idProduct === detail.productID);
-
       return {
-        id: product?.id || detail.productID, // dùng id thực nếu có
+        id: product?.id || detail.productID,
         productName: detail.nameProduct,
         unitPrice: detail.unitPrice,
         qty: detail.qty,
@@ -127,8 +122,7 @@ export default function MyProfile() {
       };
     });
 
-    setOrderUpdate(newItemsUpdate);
-    // setCartItems(newItemsUpdate); // hoặc updateLocalStorage(newCartItems
+    setCartItems(newCartItems); // hoặc updateLocalStorage(newCartItems
     navigate("/checkout", {
       state: {
         statusOrder: "update",
@@ -136,31 +130,6 @@ export default function MyProfile() {
         itemOrderUpdate: newItemsUpdate,
       },
     });
-  };
-
-  const handleCancleOrder = (order) => {
-    console.log("Order Cancle ", order);
-  };
-
-  const handleGrantAdmin = async (userId) => {
-    try {
-      const response = await axios.put(
-        `http://localhost:3004/api/auth/grant-admin/${userId}`
-      );
-      const updatedUser = response.data;
-
-      // Cập nhật lại danh sách user trong state
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user._id === updatedUser._id ? updatedUser : user
-        )
-      );
-
-      alert("Cấp Quyền Thành Công !");
-    } catch (error) {
-      console.error("Lỗi khi cấp quyền admin:", error);
-      alert("Không thể cấp quyền cho người dùng này!");
-    }
   };
 
   const menuItems = [
@@ -175,49 +144,15 @@ export default function MyProfile() {
   ];
 
   useEffect(() => {
-    let retryCount = 0;
-    const maxRetries = 5;
-
-    const fetchOrders = () => {
-      return axios.get(`http://localhost/orders/${user.id}`);
-    };
-
-    const fetchUsers = () => {
-      return axios.get("http://localhost:3004/api/auth/getAllUser");
-    };
-
-    const fetchDataWithRetry = async () => {
-      while (retryCount < maxRetries) {
-        try {
-          // Gọi cùng lúc 2 API
-          const [ordersRes, usersRes] = await Promise.all([
-            fetchOrders(),
-            fetchUsers(),
-          ]);
-
-          // Nếu thành công thì set dữ liệu và thoát vòng lặp
-          setOrders(ordersRes.data);
-          setUsers(usersRes.data);
-          setErrorMsg(""); // reset lỗi nếu có trước đó
-          return;
-        } catch (error) {
-          retryCount++;
-
-          if (retryCount < maxRetries) {
-            setErrorMsg("Có 1 chút sự cố vui lòng đợi...");
-          } else {
-            setErrorMsg(
-              "Server hiện tại đang có vấn đề. Vui lòng quay lại sau."
-            );
-            return;
-          }
-          // đợi 1 giây trước khi thử lại
-          await new Promise((res) => setTimeout(res, 3000));
-        }
-      }
-    };
-
-    fetchDataWithRetry();
+    axios
+      .get(`http://localhost/orders/${user.id}`)
+      .then((res) => {
+        console.log(res.data);
+        setOrders(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   return (
@@ -254,40 +189,82 @@ export default function MyProfile() {
         {/* Edit Profile */}
         {selectedTab === "Personal Information" && (
           <div className="personal-info">
-            <div className="header">
-              <div className="profile-picture-update">
-                <img src={user.pic} alt="Profile" className="avatar__edit" />
-                <button className="change-photo">Change Photo</button>
+            <h2>Personal Information</h2>
+            {errorMessage && (
+              <div style={{ color: "red", marginBottom: "1rem" }}>
+                {errorMessage}
               </div>
-              <button className="edit-profile">Edit Profile</button>
-            </div>
-            <div className="form-row">
+            )}
+            {successMessage && (
+              <div style={{ color: "green", marginBottom: "1rem" }}>
+                {successMessage}
+              </div>
+            )}
+            <form onSubmit={handleUpdateProfile} className="edit-profile-form">
               <div className="form-group">
-                <label>First Name</label>
-                <input type="text" placeholder="First Name" />
+                <label>Name</label>
+                <input
+                  type="text"
+                  value={editForm.name}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, name: e.target.value })
+                  }
+                  placeholder="Enter your name"
+                  disabled={loading}
+                />
               </div>
               <div className="form-group">
-                <label>Last Name</label>
-                <input type="text" placeholder="Last Name" />
+                <label>Email</label>
+                <input
+                  type="email"
+                  value={editForm.email}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, email: e.target.value })
+                  }
+                  placeholder="Enter your email"
+                  disabled={loading}
+                />
               </div>
-            </div>
-            <div className="form-row">
               <div className="form-group">
-                <label>Phone Number</label>
-                <input type="text" placeholder="Phone Number" />
+                <label>Password (leave blank to keep current)</label>
+                <input
+                  type="password"
+                  value={editForm.password}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, password: e.target.value })
+                  }
+                  placeholder="Enter new password"
+                  disabled={loading}
+                />
               </div>
               <div className="form-group">
-                <label>Email Address</label>
-                <input type="text" placeholder="Email Address" />
+                <label>Profile Picture</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  disabled={loading}
+                />
+                {editForm.pic && (
+                  <img
+                    src={URL.createObjectURL(editForm.pic)}
+                    alt="Preview"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      marginTop: "10px",
+                    }}
+                  />
+                )}
               </div>
-            </div>
-            <div className="form-group full-width">
-              <label>Address</label>
-              <input type="text" placeholder="Address" />
-            </div>
+              <button type="submit" disabled={loading}>
+                {loading ? "Updating..." : "Update Profile"}
+              </button>
+            </form>
           </div>
         )}
 
+        {/* Các phần còn lại giữ nguyên */}
         {selectedTab === "Manage Addresses" && (
           <div className="manage-addresses">
             <button className="add-address" onClick={() => setShowForm(true)}>
@@ -516,7 +493,7 @@ export default function MyProfile() {
                             const orderDate = new Date(order.orderDate);
                             const now = new Date();
                             const timeDiff = now - orderDate;
-                            const daysDiff = timeDiff / (1000 * 60 * 60 * 24); // tính số ngày chênh lệch
+                            const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
 
                             return (
                               <div

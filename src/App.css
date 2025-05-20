@@ -110,7 +110,9 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 400px;
+  background-color: #131118; /* Move background color to container for full coverage */
+  padding: 40px 0; /* Add padding instead of fixed height */
+  min-height: 300px; /* Ensure minimum height but allow growth */
 }
 
 .content {
@@ -126,58 +128,104 @@
 
 .footer {
   display: flex;
+  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
   justify-content: space-between;
-  width: 88%;
-  background-color: #131118;
+  width: 90%; /* Slightly wider but still constrained */
+  max-width: 1200px; /* Prevent excessive stretching on large screens */
+  color: #97979a; /* Default text color for consistency */
 }
 
 .footer__nav--item {
-  margin: 0 auto;
-  justify-content: center;
+  flex: 1; /* Distribute space evenly */
+  min-width: 200px; /* Ensure items don't collapse too much */
+  padding: 20px; /* Add padding for spacing */
   display: flex;
   flex-direction: column;
+  align-items: flex-start; /* Align items to the start for consistency */
 }
 
 .img__footer {
   width: 150px;
-  height: 70px;
+  height: auto; /* Maintain aspect ratio */
+  margin-bottom: 15px; /* Space below logo */
 }
 
 .list__footer--item {
   list-style: none;
+  padding: 0;
 }
 
 .nav__item--headline {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   color: white;
+  font-size: 1.5rem; /* Consistent heading size */
 }
 
 .list__footer--item > li {
-  height: 50px;
+  margin-bottom: 10px; /* Space between list items */
   color: #97979a;
   display: flex;
+  align-items: center; /* Align icons and text */
+  font-size: 1rem; /* Consistent font size */
 }
 
 .title__enter--mail {
-  width: 250px;
+  max-width: 250px; /* Constrain width to prevent overflow */
+  font-size: 0.9rem; /* Slightly smaller for readability */
+  line-height: 1.4; /* Improve text readability */
 }
 
 .input__email {
-  margin-top: 30px;
-  display: flex;
-  align-items: center;
-  width: 250px;
-  height: 30px;
+  margin-top: 20px;
+  width: 100%; /* Full width of parent */
+  max-width: 250px; /* Constrain input width */
+  height: 40px; /* Slightly taller for better UX */
   background-color: #131118;
   border: 2px solid white;
+  border-radius: 5px; /* Add slight rounding */
+  padding: 0 10px; /* Add padding for text input */
+  color: white; /* Ensure text is visible */
 }
 
 .footer__nav--item--subricse {
-  margin-top: -140px;
+  margin-top: 0; /* Remove negative margin to prevent overlap */
 }
 
-/* .footer__icon--sendMail {
-  position: absolute;
-  margin-top: 8px;
-  left: 90%;
-} */
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column; /* Stack items vertically on smaller screens */
+    align-items: center; /* Center items */
+    width: 95%; /* Slightly wider for small screens */
+  }
+
+  .footer__nav--item {
+    min-width: 100%; /* Full width for each item */
+    align-items: center; /* Center content */
+    text-align: center; /* Center text */
+    padding: 15px; /* Reduce padding */
+  }
+
+  .img__footer {
+    width: 120px; /* Smaller logo for mobile */
+  }
+
+  .title__enter--mail,
+  .input__email {
+    max-width: 100%; /* Full width for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .footer__nav--item {
+    padding: 10px; /* Further reduce padding */
+  }
+
+  .nav__item--headline {
+    font-size: 1.2rem; /* Smaller headings */
+  }
+
+  .list__footer--item > li {
+    font-size: 0.9rem; /* Smaller text */
+  }
+}
