@@ -15,6 +15,7 @@ const PaymentProcess = () => {
     orderCode,
     countdown: initialCountdown,
     statusOrder,
+    itemOrderUpdate,
     orderUpdate,
   } = location.state || {};
 
@@ -41,6 +42,9 @@ const PaymentProcess = () => {
   );
   const grandTotal = subtotal - 0 + deliveryCharge;
 
+  const productsToRender =
+    statusOrder === "update" ? itemOrderUpdate || [] : cartItems || [];
+
   // Handle Edit Order
   const handleUpdateOrder = (status) => {
     setLoading(true); // bắt đầu loading
@@ -51,7 +55,7 @@ const PaymentProcess = () => {
 
     axios
       .post("http://localhost/orders/updateOrder", {
-        items: cartItems,
+        items: itemOrderUpdate,
         userID,
         orders: orderUpdate,
         status,
@@ -183,7 +187,7 @@ const PaymentProcess = () => {
 
   return (
     <div style={{ padding: 30 }}>
-      {cartItems.map((product) => (
+      {productsToRender.map((product) => (
         <div key={product.id} className="product-item">
           <div className="product-info product-column">
             <img
@@ -208,13 +212,13 @@ const PaymentProcess = () => {
               )}
             </div>
           </div>
-          <p className="product-qty">Quantity : {product.qty}</p>
+
           <p className="product-price price-column">
             ${product.unitPrice.toFixed(2)}
           </p>
+          <p className="product-qty">Quantity : {product.qty}</p>
         </div>
       ))}
-
       {loading && <Loading />}
 
       {qrData && !isExpired && (

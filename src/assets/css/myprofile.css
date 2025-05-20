@@ -448,6 +448,7 @@ input:checked + .slider:before {
 }
 
 .cancel-btn {
+  margin-top: 5px;
   background-color: #f87171;
   color: white;
   border: none;
@@ -456,6 +457,12 @@ input:checked + .slider:before {
 .cancel-btn:hover,
 .review-btn:hover {
   opacity: 0.9;
+}
+
+.cancel-btn:hover {
+  background-color: white;
+  color: #f87171;
+  border: 2px solid #f87171;
 }
 
 .scroll-area {
@@ -515,4 +522,58 @@ input:checked + .slider:before {
 .payment-btn:hover {
   background-color: white;
   color: black;
+}
+
+/* List Users */
+.user-list-container {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-list-scroll {
+  max-height: 400px;
+  width: 100%;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.user-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+}
+
+.user-info p {
+  margin: 4px 0;
+}
+
+.grant-button {
+  background-color: #000;
+  color: #fff;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.grant-button:hover {
+  background-color: #222;
 }

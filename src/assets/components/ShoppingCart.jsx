@@ -2,9 +2,11 @@ import React from "react";
 import { useCart } from "./Context/CartContext";
 import "../css/ShoppingCart.css"; // nếu bạn có file CSS riêng
 import { useNavigate } from "react-router-dom";
+import { FaTrash } from "react-icons/fa";
 
 const ShoppingCart = ({ onClose }) => {
-  const { cartItems, totalItem, totalPrice } = useCart();
+  const { cartItems, totalItem, totalPrice, removeFromCart, clearCart } =
+    useCart();
   const navigate = useNavigate();
 
   const handleToCheckOut = () => {
@@ -38,6 +40,12 @@ const ShoppingCart = ({ onClose }) => {
                   <p>Price: ${item.unitPrice}</p>
                   <p>Total: ${item.unitPrice * item.qty}</p>
                 </div>
+                <button
+                  className="delete-button"
+                  onClick={() => removeFromCart(item.id)}
+                >
+                  <FaTrash />
+                </button>
               </div>
             ))}
           </div>
@@ -45,11 +53,13 @@ const ShoppingCart = ({ onClose }) => {
 
         <div className="subtotal-section">
           <p>Total Items: {totalItem}</p>
-          <p>Subtotal: ${totalPrice.toFixed(2)}</p>
+          <p>Subtotal: ${totalPrice}</p>
         </div>
 
         <div className="button-container">
-          <button className="view-cart">View Cart</button>
+          <button className="view-cart" onClick={() => clearCart()}>
+            Delete Cart
+          </button>
           <button className="checkout" onClick={handleToCheckOut}>
             Checkout
           </button>

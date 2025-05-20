@@ -21,7 +21,7 @@ export default function ProductDetail() {
       .catch((err) => {
         console.log(err);
       });
-  });
+  }, []);
 
   const { addToCart } = useCart();
 

@@ -128,3 +128,14 @@
 .checkout:hover {
   background-color: #0056b3;
 }
+
+.delete-button {
+  width: 40px;
+  height: 40px;
+  background: #ff4d4d;
+  border: none;
+  color: white;
+
+  cursor: pointer;
+  transition: background 0.2s;
+}

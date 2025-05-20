@@ -71,7 +71,7 @@ export default function Header() {
           </li>
           {user?.isAdmin === true && (
             <li>
-              <Link to="/revenue">
+              <Link to="/thong-ke">
                 <p>Revenue</p>
               </Link>
             </li>

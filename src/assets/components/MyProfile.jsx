@@ -12,6 +12,8 @@ import {
   FiPhone,
   FiCreditCard,
 } from "react-icons/fi";
+
+import { FaUsers } from "react-icons/fa";
 import { useEffect } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthUtils/AuthContexts";
@@ -24,6 +26,9 @@ export default function MyProfile() {
   const [selectedTab, setSelectedTab] = useState("My Orders");
   const { user } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [errorMsg, setErrorMsg] = useState("");
+
   const { products } = useProducts();
   const {
     cartItems,
@@ -35,6 +40,7 @@ export default function MyProfile() {
     totalPay,
   } = useCart();
   const navigate = useNavigate();
+  const [orderUpdate, setOrderUpdate] = useState([]);
 
   const [addresses, setAddresses] = useState([
     {
@@ -107,7 +113,7 @@ export default function MyProfile() {
 
   const handleUpdateOrder = (order) => {
     console.log("Order Update ", order);
-    const newCartItems = order.orderDetails.map((detail) => {
+    const newItemsUpdate = order.orderDetails.map((detail) => {
       console.log(detail);
 
       const product = products.find((p) => p.idProduct === detail.productID);
@@ -121,13 +127,40 @@ export default function MyProfile() {
       };
     });
 
-    setCartItems(newCartItems); // hoặc updateLocalStorage(newCartItems
+    setOrderUpdate(newItemsUpdate);
+    // setCartItems(newItemsUpdate); // hoặc updateLocalStorage(newCartItems
     navigate("/checkout", {
       state: {
         statusOrder: "update",
         orderUpdate: order,
+        itemOrderUpdate: newItemsUpdate,
       },
     });
+  };
+
+  const handleCancleOrder = (order) => {
+    console.log("Order Cancle ", order);
+  };
+
+  const handleGrantAdmin = async (userId) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3004/api/auth/grant-admin/${userId}`
+      );
+      const updatedUser = response.data;
+
+      // Cập nhật lại danh sách user trong state
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === updatedUser._id ? updatedUser : user
+        )
+      );
+
+      alert("Cấp Quyền Thành Công !");
+    } catch (error) {
+      console.error("Lỗi khi cấp quyền admin:", error);
+      alert("Không thể cấp quyền cho người dùng này!");
+    }
   };
 
   const menuItems = [
@@ -138,18 +171,53 @@ export default function MyProfile() {
     { name: "Saved Cards", icon: <FiCreditCard /> },
     { name: "Notifications", icon: <FiBell /> },
     { name: "Settings", icon: <FiSettings /> },
+    { name: "Users", icon: <FaUsers /> },
   ];
 
   useEffect(() => {
-    axios
-      .get(`http://localhost/orders/${user.id}`)
-      .then((res) => {
-        console.log(res.data);
-        setOrders(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    let retryCount = 0;
+    const maxRetries = 5;
+
+    const fetchOrders = () => {
+      return axios.get(`http://localhost/orders/${user.id}`);
+    };
+
+    const fetchUsers = () => {
+      return axios.get("http://localhost:3004/api/auth/getAllUser");
+    };
+
+    const fetchDataWithRetry = async () => {
+      while (retryCount < maxRetries) {
+        try {
+          // Gọi cùng lúc 2 API
+          const [ordersRes, usersRes] = await Promise.all([
+            fetchOrders(),
+            fetchUsers(),
+          ]);
+
+          // Nếu thành công thì set dữ liệu và thoát vòng lặp
+          setOrders(ordersRes.data);
+          setUsers(usersRes.data);
+          setErrorMsg(""); // reset lỗi nếu có trước đó
+          return;
+        } catch (error) {
+          retryCount++;
+
+          if (retryCount < maxRetries) {
+            setErrorMsg("Có 1 chút sự cố vui lòng đợi...");
+          } else {
+            setErrorMsg(
+              "Server hiện tại đang có vấn đề. Vui lòng quay lại sau."
+            );
+            return;
+          }
+          // đợi 1 giây trước khi thử lại
+          await new Promise((res) => setTimeout(res, 3000));
+        }
+      }
+    };
+
+    fetchDataWithRetry();
   }, []);
 
   return (
@@ -164,18 +232,20 @@ export default function MyProfile() {
           </button>
         </div>
         <ul>
-          {menuItems.map((item) => (
-            <li
-              key={item.name}
-              className={`menu-item ${
-                selectedTab === item.name ? "active" : ""
-              }`}
-              onClick={() => setSelectedTab(item.name)}
-            >
-              <span className="icon">{item.icon}</span>
-              {item.name}
-            </li>
-          ))}
+          {menuItems
+            .filter((item) => item.name !== "Users" || user.isAdmin)
+            .map((item) => (
+              <li
+                key={item.name}
+                className={`menu-item ${
+                  selectedTab === item.name ? "active" : ""
+                }`}
+                onClick={() => setSelectedTab(item.name)}
+              >
+                <span className="icon">{item.icon}</span>
+                {item.name}
+              </li>
+            ))}
         </ul>
       </div>
 
@@ -384,10 +454,45 @@ export default function MyProfile() {
           </div>
         )}
 
+        {selectedTab === "Users" && user.isAdmin && (
+          <div className="user-list-container">
+            <h2>Danh sách người dùng</h2>
+            <div className="user-list-scroll">
+              {errorMsg && <div style={{ color: "red" }}>{errorMsg}</div>}
+              {users.map((user, index) => (
+                <div className="user-card" key={index}>
+                  <img src={user.pic} alt={user.name} className="user-avatar" />
+                  <div className="user-info">
+                    <p>
+                      <strong>Name:</strong> {user.name}
+                    </p>
+                    <p>
+                      <strong>Email:</strong> {user.email}
+                    </p>
+                    <p>
+                      <strong>Admin:</strong> {user.isAdmin ? "Yes" : "No"}
+                    </p>
+
+                    {!user.isAdmin && (
+                      <button
+                        className="grant-button"
+                        onClick={() => handleGrantAdmin(user._id)}
+                      >
+                        Cấp quyền
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {selectedTab === "My Orders" && (
           <div>
             <div className="scroll-area">
               <div className="orders-container">
+                {errorMsg && <div style={{ color: "red" }}>{errorMsg}</div>}
                 {orders.map((order) => (
                   <div key={order.orderID} className="order-card">
                     <div className="order-header">
@@ -414,7 +519,12 @@ export default function MyProfile() {
                             const daysDiff = timeDiff / (1000 * 60 * 60 * 24); // tính số ngày chênh lệch
 
                             return (
-                              <div style={{ marginTop: "10px" }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                }}
+                              >
                                 <button
                                   className="btn--process payment-btn"
                                   onClick={() => handleUpdateOrder(order)}
@@ -422,7 +532,10 @@ export default function MyProfile() {
                                   Thanh Toán
                                 </button>
                                 {daysDiff <= 3 && (
-                                  <button className="cancel-btn">
+                                  <button
+                                    className="btn--process cancel-btn"
+                                    onClick={() => handleCancleOrder(order)}
+                                  >
                                     Cancel Order
                                   </button>
                                 )}
@@ -492,6 +605,7 @@ export default function MyProfile() {
           "My Orders",
           "My Wishlists",
           "Notifications",
+          user.isAdmin && "Users",
         ].includes(selectedTab) && (
           <div className="default-content">
             <h2>{selectedTab}</h2>

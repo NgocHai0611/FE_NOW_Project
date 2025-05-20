@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../AuthUtils/AuthContexts";
+import axios from "axios";
 
 const CartContext = createContext();
 
@@ -9,86 +10,106 @@ export const CartProvider = ({ children }) => {
   const [totalPay, setTotalPay] = useState();
   const { user } = useContext(AuthContext);
 
-  console.log("User trong cart item", user);
-
   useEffect(() => {
-    if (user && user._id) {
-      setUserId(user._id);
-      const savedCart = JSON.parse(localStorage.getItem("itemCart")) || {};
-      setCartItems(savedCart[user._id] || []);
+    if (user && user.id) {
+      console.log("User Add To Cart: ", user);
+      setUserId(user.id);
+      fetchCartFromRedis(user.id);
     }
-  }, [user]); // Chỉ chạy khi user thay đổi
+  }, [user]);
 
-  const updateLocalStorage = (updatedCart) => {
-    const savedCart = JSON.parse(localStorage.getItem("itemCart")) || {};
-    savedCart[userId] = updatedCart;
-    localStorage.setItem("itemCart", JSON.stringify(savedCart));
-  };
-
-  const addToCart = (item, qty = 1) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i.id === item.id);
-      const currentQtyInCart = existingItem ? existingItem.qty : 0;
-
-      if (currentQtyInCart + qty > item.qtyStock) {
-        alert("Số lượng sản phẩm trong kho không đủ!");
-        return prevItems; // Không cập nhật giỏ hàng
+  const fetchCartFromRedis = async (uid) => {
+    try {
+      const res = await axios.get(`http://localhost:3005/cart/${uid}`);
+      if (res.data.success) {
+        console.log("Cart item trong redis : ", res.data);
+        setCartItems(res.data.cart);
       }
+    } catch (error) {
+      console.error("Lỗi khi lấy giỏ hàng từ Redis:", error);
+    }
+  };
 
-      let updatedCart;
+  const addToCart = async (item, qty = 1) => {
+    console.log("User ID Khi Add ", userId);
 
-      if (existingItem) {
-        updatedCart = prevItems.map((i) =>
-          i.id === item.id ? { ...i, qty: i.qty + qty } : i
-        );
-      } else {
-        updatedCart = [...prevItems, { ...item, qty }];
+    try {
+      const res = await axios.post(`http://localhost:3005/cart/add`, {
+        userId,
+        item,
+        qty,
+      });
+      if (res.data.success) {
+        setCartItems(res.data.cart);
+        alert("Sản phẩm đã được thêm vào giỏ hàng!");
       }
-
-      updateLocalStorage(updatedCart);
-      alert("Sản Phẩm Đã Được Thêm Vào Giỏ Hàng !");
-      return updatedCart;
-    });
+    } catch (error) {
+      console.error("Lỗi khi thêm sản phẩm vào Redis:", error);
+    }
   };
 
-  const removeFromCart = (itemId) => {
-    const updatedCart = cartItems.filter((i) => i.id !== itemId);
-    setCartItems(updatedCart);
-    updateLocalStorage(updatedCart);
+  const removeFromCart = async (itemId) => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:3005/cart/remove/${userId}/${itemId}`
+      );
+      if (res.data.success) {
+        setCartItems(res.data.cart);
+      }
+    } catch (error) {
+      console.error("Lỗi khi xoá sản phẩm:", error);
+    }
   };
 
-  const handleIncreaseItem = (product, qty = 1) => {
-    const existingItem = cartItems.find((item) => item.id === product.id);
-    const currentQtyInCart = existingItem ? existingItem.qty : 0;
+  const handleIncreaseItem = async (item, increaseQty = 1) => {
+    const currentItem = cartItems.find((i) => i.id === item.id);
+    const newQty = (currentItem?.qty || 0) + increaseQty;
 
-    if (currentQtyInCart + qty > product.qtyStock) {
-      alert("Số lượng sản phẩm trong kho không đủ!");
+    if (newQty > item.qtyStock) {
+      alert("Số lượng trong kho không đủ!");
       return;
     }
 
-    addToCart(product, qty);
+    await updateItemQty(item.id, newQty);
   };
 
-  const handleDecreaseItem = (itemId) => {
-    const existingItem = cartItems.find((i) => i.id === itemId);
-    if (!existingItem || existingItem.qty <= 1) return;
+  const handleDecreaseItem = async (itemId) => {
+    const currentItem = cartItems.find((i) => i.id === itemId);
+    if (!currentItem || currentItem.qty <= 1) return;
 
-    const updatedCart = cartItems.map((i) =>
-      i.id === itemId ? { ...i, qty: i.qty - 1 } : i
-    );
-    setCartItems(updatedCart);
-    updateLocalStorage(updatedCart);
+    await updateItemQty(itemId, currentItem.qty - 1);
   };
 
-  const clearCart = (idUser) => {
-    console.log("Cart cua user can xoa ", idUser);
-    setCartItems([]);
-    const savedCart = JSON.parse(localStorage.getItem("itemCart")) || {};
-    savedCart[idUser] = [];
-    localStorage.setItem("itemCart", JSON.stringify(savedCart));
+  const updateItemQty = async (itemId, qty) => {
+    try {
+      const res = await axios.put(`http://localhost:3005/cart/updateQty`, {
+        userId,
+        itemId,
+        qty,
+      });
+      if (res.data.success) {
+        setCartItems(res.data.cart);
+      }
+    } catch (error) {
+      console.error("Lỗi cập nhật số lượng:", error);
+    }
   };
 
-  const totalItem = cartItems.reduce((sum, item) => sum + item.qty, 0);
+  const clearCart = async () => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:3005/cart/clear/${userId}`
+      );
+      if (res.data.success) {
+        setCartItems([]);
+      }
+    } catch (error) {
+      console.error("Lỗi khi xoá toàn bộ giỏ hàng:", error);
+    }
+  };
+
+  const totalItem = cartItems.length;
+
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + item.qty * item.unitPrice,
     0

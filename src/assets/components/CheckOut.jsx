@@ -31,16 +31,20 @@ export default function CheckOut() {
   const [loading, setLoading] = useState(false);
   const location = useLocation(); // Thêm dòng này
 
-  const { statusOrder, orderUpdate } = location.state || {};
+  const { statusOrder, orderUpdate, itemOrderUpdate } = location.state || {};
+
+  const productsToRender =
+    statusOrder === "update" ? itemOrderUpdate || [] : cartItems || [];
 
   console.log("Order Update ", orderUpdate);
+  console.log("Item Order Update ", itemOrderUpdate);
 
   // Handle Check Out
   const handleCheckout = async () => {
     try {
       const res = await axios.post(
         "http://localhost:3003/create-payment-link",
-        { grandTotal, cartItems }
+        { grandTotal, cartItems, itemOrderUpdate, statusOrder }
       );
       setQrData(res.data.qrCode);
       setOrderCode(res.data.orderCode);
@@ -55,6 +59,7 @@ export default function CheckOut() {
           countdown: 120,
           statusOrder,
           orderUpdate,
+          itemOrderUpdate,
         },
       });
     } catch (err) {
@@ -88,7 +93,7 @@ export default function CheckOut() {
       <div className="checkout-content">
         <div className="checkout-products">
           <div className="product-list">
-            {cartItems.map((product) => (
+            {productsToRender.map((product) => (
               <div key={product.id} className="product-item">
                 <div className="product-info product-column">
                   <img
@@ -115,9 +120,11 @@ export default function CheckOut() {
                     )}
                   </div>
                 </div>
+
                 <p className="product-price price-column">
-                  ${product.unitPrice.toFixed(2)}
+                  ${product.unitPrice}
                 </p>
+
                 <div className="quantity-control quantity-column">
                   <button
                     className="quantity-button"
@@ -147,7 +154,7 @@ export default function CheckOut() {
         {/* Thanh toán */}
         <div className="checkout-summary">
           <h3 className="subtotal">
-            Subtotal <span>${subtotal.toFixed(2)}</span>
+            Subtotal <span>${subtotal}</span>
           </h3>
           <div className="discount-section">
             <input
@@ -162,10 +169,10 @@ export default function CheckOut() {
             </button>
           </div>
           <h2>
-            Delivery Charge <span>${deliveryCharge.toFixed(2)}</span>
+            Delivery Charge <span>${deliveryCharge}</span>
           </h2>
           <h3 className="total-amount">
-            Grand Total <span>${grandTotal.toFixed(2)}</span>
+            Grand Total <span>${grandTotal}</span>
           </h3>
           <button className="checkout-button" onClick={handleCheckout}>
             Proceed to Checkout
