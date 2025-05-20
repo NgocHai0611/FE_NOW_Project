@@ -236,21 +236,19 @@ export default function MyProfile() {
         {/* Edit Profile */}
         {selectedTab === "Personal Information" && (
           <div className="personal-info">
-            <h2>Personal Information</h2>
+            <h2 className="personal-info-heading">Personal Information</h2>
             {errorMessage && (
-              <div style={{ color: "red", marginBottom: "1rem" }}>
-                {errorMessage}
-              </div>
+              <div className="error-message">{errorMessage}</div>
             )}
             {successMessage && (
-              <div style={{ color: "green", marginBottom: "1rem" }}>
-                {successMessage}
-              </div>
+              <div className="success-message">{successMessage}</div>
             )}
+            
             <form onSubmit={handleUpdateProfile} className="edit-profile-form">
-              <div className="form-group">
-                <label>Name</label>
-                <input
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Name</label>
+                  <input
                   type="text"
                   value={editForm.name}
                   onChange={(e) =>
@@ -258,11 +256,11 @@ export default function MyProfile() {
                   }
                   placeholder="Enter your name"
                   disabled={loading}
-                />
-              </div>
-              <div className="form-group">
-                <label>Email</label>
-                <input
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
                   type="email"
                   value={editForm.email}
                   onChange={(e) =>
@@ -270,43 +268,44 @@ export default function MyProfile() {
                   }
                   placeholder="Enter your email"
                   disabled={loading}
-                />
+                  />
+                </div>
               </div>
-              <div className="form-group">
+              <div className="form-group full-width">
                 <label>Password (leave blank to keep current)</label>
                 <input
-                  type="password"
-                  value={editForm.password}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, password: e.target.value })
-                  }
-                  placeholder="Enter new password"
-                  disabled={loading}
+                type="password"
+                value={editForm.password}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, password: e.target.value })
+                }
+                placeholder="Enter new password"
+                disabled={loading}
                 />
               </div>
-              <div className="form-group">
+              
+              <div className="form-group full-width">
                 <label>Profile Picture</label>
                 <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  disabled={loading}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                disabled={loading}
                 />
                 {editForm.pic && (
                   <img
-                    src={URL.createObjectURL(editForm.pic)}
-                    alt="Preview"
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      marginTop: "10px",
-                    }}
+                  src={URL.createObjectURL(editForm.pic)}
+                  alt="Preview"
+                  className="profile-pic-preview"
                   />
                 )}
               </div>
-              <button type="submit" disabled={loading}>
-                {loading ? "Updating..." : "Update Profile"}
-              </button>
+              
+              <div className="button-container">
+                <button type="submit" disabled={loading}>
+                  {loading ? "Updating..." : "Update Profile"}
+                </button>
+              </div>
             </form>
           </div>
         )}
