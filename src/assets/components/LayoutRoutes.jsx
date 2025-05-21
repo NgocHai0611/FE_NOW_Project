@@ -34,12 +34,11 @@ import ProtectedRoute from "../components/ProtectedRoute/protectedRoute";
 function LayoutRoutes() {
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
+  const isPaymentProcessPage = location.pathname === "/paymentProccess";
 
   return (
     <>
-      {!isLoginPage && <Header />}
-      {!isLoginPage && <CountdownBar />}
-      <CountdownBar /> {/* Hiển thị mọi trang */}
+      {!isLoginPage && !isPaymentProcessPage && <Header />}
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Auth />} />

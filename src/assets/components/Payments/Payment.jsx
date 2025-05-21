@@ -19,6 +19,7 @@ const PaymentProcess = () => {
     orderUpdate,
   } = location.state || {};
 
+  const [qrDataState, setQrData] = useState(qrData || "");
   const [countdown, setCountdown] = useState(initialCountdown || 60); // Thời gian countdown là 2 phút (120 giây)
   const [isExpired, setIsExpired] = useState(false); // Trạng thái hết hạn
   const [loading, setLoading] = useState(false);

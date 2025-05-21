@@ -170,6 +170,7 @@ export default function MyProfile() {
       });
   };
 
+  // Hàm Cấp Quyền
   const handleGrantAdmin = async (userId) => {
     try {
       const response = await axios.put(
@@ -255,50 +256,48 @@ export default function MyProfile() {
   };
 
   useEffect(() => {
-    let retryCount = 0;
     const maxRetries = 5;
 
-    const fetchOrders = () => {
-      return axios.get(`http://localhost/orders/${user.id}`);
-    };
-
-    const fetchUsers = () => {
-      return axios.get("http://localhost:3004/api/auth/getAllUser");
-    };
+    const fetchOrders = () => axios.get(`http://localhost/orders/${user.id}`);
+    const fetchUsers = () =>
+      axios.get("http://localhost:3004/api/auth/getAllUser");
 
     const fetchDataWithRetry = async () => {
+      let retryCount = 0;
+
       while (retryCount < maxRetries) {
         try {
-          // Gọi cùng lúc 2 API
+          setLoading(true); // 👈 Bắt đầu loading
           const [ordersRes, usersRes] = await Promise.all([
             fetchOrders(),
             fetchUsers(),
           ]);
 
-          // Nếu thành công thì set dữ liệu và thoát vòng lặp
           setOrders(ordersRes.data);
           setUsers(usersRes.data);
-          setErrorMsg(""); // reset lỗi nếu có trước đó
+          setErrorMsg("");
+          setLoading(false); // 👈 Kết thúc loading
           return;
         } catch (error) {
           retryCount++;
 
           if (retryCount < maxRetries) {
-            setErrorMsg("Có 1 chút sự cố vui lòng đợi...");
+            setErrorMsg(`Đang cố gắng kết nối lại lần thứ ${retryCount}...`);
           } else {
             setErrorMsg(
               "Server hiện tại đang có vấn đề. Vui lòng quay lại sau."
             );
+            setLoading(false); // 👈 Kết thúc loading
             return;
           }
-          // đợi 1 giây trước khi thử lại
-          await new Promise((res) => setTimeout(res, 3000));
+
+          await new Promise((res) => setTimeout(res, 3000 * retryCount));
         }
       }
     };
 
     fetchDataWithRetry();
-  }, []);
+  }, [user.id]);
 
   return (
     <div className="profile-container">
@@ -614,6 +613,12 @@ export default function MyProfile() {
             <div className="scroll-area">
               <div className="orders-container">
                 {errorMsg && <div style={{ color: "red" }}>{errorMsg}</div>}
+                {loading ? (
+                  <p style={{ textAlign: "center", fontSize: "18px" }}>
+                    Đang tải dữ liệu...
+                  </p>
+                ) : null}
+
                 {orders.map((order) => (
                   <div key={order.orderID} className="order-card">
                     <div className="order-header">
@@ -721,7 +726,7 @@ export default function MyProfile() {
         {selectedTab === "Revenue Orders" && (
           <div
             className="container__statics--order"
-            style={{ height: 600, overflowY: "auto", width: "100%" }}
+            style={{ height: 600, overflowY: "auto", width: 800 }}
           >
             <div>
               <ThongKeChiTieu customerID={user.id}></ThongKeChiTieu>
