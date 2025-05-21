@@ -38,7 +38,8 @@ function LayoutRoutes() {
   return (
     <>
       {!isLoginPage && <Header />}
-
+      {!isLoginPage && <CountdownBar />}
+      <CountdownBar /> {/* Hiển thị mọi trang */}
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Auth />} />
@@ -55,7 +56,6 @@ function LayoutRoutes() {
         <Route path="/paymentFail" element={<PaymentFail />} />
         <Route path="/thong-ke" element={<ThongKe />} />
       </Routes>
-
       {!isLoginPage && <Footer />}
     </>
   );

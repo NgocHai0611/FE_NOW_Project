@@ -15,11 +15,11 @@ const PaymentProcess = () => {
     orderCode,
     countdown: initialCountdown,
     statusOrder,
-    itemUpdate,
+    itemOrderUpdate,
     orderUpdate,
   } = location.state || {};
 
-  const [countdown, setCountdown] = useState(initialCountdown || 60); // Thời gian countdown là 2 phút (120 giây)
+  const [countdown, setCountdown] = useState(initialCountdown || 120); // Thời gian countdown là 2 phút (120 giây)
   const [isExpired, setIsExpired] = useState(false); // Trạng thái hết hạn
   const [loading, setLoading] = useState(false);
   const deliveryCharge = 5;
@@ -43,7 +43,7 @@ const PaymentProcess = () => {
   const grandTotal = subtotal - 0 + deliveryCharge;
 
   const productsToRender =
-    statusOrder === "update" ? itemUpdate || [] : cartItems || [];
+    statusOrder === "update" ? itemOrderUpdate || [] : cartItems || [];
 
   // Handle Edit Order
   const handleUpdateOrder = (status) => {
@@ -55,7 +55,7 @@ const PaymentProcess = () => {
 
     axios
       .post("http://localhost/orders/updateOrder", {
-        items: itemUpdate,
+        items: itemOrderUpdate,
         userID,
         orders: orderUpdate,
         status,
@@ -123,7 +123,7 @@ const PaymentProcess = () => {
 
         // Điều hướng tới trang thất bại
         navigate("/paymentFail");
-      }, 1 * 60 * 1000); // 2 phút
+      }, 2 * 60 * 1000); // 2 phút
 
       // Cleanup
       return () => {

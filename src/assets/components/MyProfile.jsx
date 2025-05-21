@@ -147,8 +147,23 @@ export default function MyProfile() {
     });
   };
 
-  const handleCancleOrder = (order) => {
-    console.log("Order Cancle ", order);
+  const handleCancelOrder = (order) => {
+    const confirmed = window.confirm(
+      "Bạn có chắc chắn muốn hủy đơn hàng này không?"
+    );
+
+    if (!confirmed) return;
+
+    axios
+      .delete(`http://localhost/orders/cancelOrder/${order.orderID}`)
+      .then((res) => {
+        console.log(res.data);
+        alert("Xóa Đơn Hàng Thành Công ");
+        getOrders(); // Hàm reload danh sách đơn hàng
+      })
+      .catch((err) => {
+        console.log("Lỗi khi hủy đơn hàng:", err);
+      });
   };
 
   const handleGrantAdmin = async (userId) => {
@@ -227,6 +242,12 @@ export default function MyProfile() {
     { name: "Settings", icon: <FiSettings /> },
     { name: "Users", icon: <FaUsers /> },
   ];
+
+  const getOrders = () => {
+    axios.get(`http://localhost/orders/${user.id}`).then((res) => {
+      setOrders(res.data);
+    });
+  };
 
   useEffect(() => {
     let retryCount = 0;
@@ -630,7 +651,7 @@ export default function MyProfile() {
                                 {daysDiff <= 3 && (
                                   <button
                                     className="btn--process cancel-btn"
-                                    onClick={() => handleCancleOrder(order)}
+                                    onClick={() => handleCancelOrder(order)}
                                   >
                                     Cancel Order
                                   </button>

@@ -1,18 +1,43 @@
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-const TimeContext = createContext();
+const TimePaymentContext = createContext();
 
-export const TimeProvider = ({ children }) => {
-  const [countdown, setCountdown] = useState(null); // null nếu chưa active
-  const [isActive, setIsActive] = useState(false); // để biết khi nào đang đếm
+export function TimePaymentProvider({ children }) {
+  const [countdown, setCountdown] = useState(0);
+  const [qrData, setQrData] = useState("");
+  const [orderCode, setOrderCode] = useState(null);
+
+  useEffect(() => {
+    if (countdown <= 0) return;
+    const timer = setInterval(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [countdown]);
+
+  const startCountdown = (seconds) => {
+    console.log("Dang Count Down ! ");
+    setCountdown(seconds);
+  };
 
   return (
-    <TimeContext.Provider
-      value={{ countdown, setCountdown, isActive, setIsActive }}
+    <TimePaymentContext.Provider
+      value={{
+        countdown,
+        setCountdown,
+        qrData,
+        setQrData,
+        orderCode,
+        setOrderCode,
+        startCountdown,
+      }}
     >
       {children}
-    </TimeContext.Provider>
+    </TimePaymentContext.Provider>
   );
-};
+}
 
-export const useTime = () => useContext(TimeContext);
+export function useCountdown() {
+  return useContext(TimePaymentContext);
+}

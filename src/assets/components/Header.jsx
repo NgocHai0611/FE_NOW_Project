@@ -76,6 +76,13 @@ export default function Header() {
               </Link>
             </li>
           )}
+          {user?.isAdmin === true && (
+            <li>
+              <Link to="/managementproduct">
+                <p>Add Product</p>
+              </Link>
+            </li>
+          )}
         </ul>
 
         <ul className="list__header--icon">

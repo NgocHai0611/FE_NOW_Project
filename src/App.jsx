@@ -19,6 +19,7 @@ import Preview from "./assets/components/Preview";
 import { AuthProvider } from "../src/assets/components/AuthUtils/AuthContexts";
 import { CartProvider } from "./assets/components/Context/CartContext";
 import { ProductsProvider } from "./assets/components/Context/ProductContext";
+import { TimePaymentProvider } from "./assets/components/Context/TimePaymentContext";
 
 // Layout Router
 import LayoutRoutes from "./assets/components/LayoutRoutes";
@@ -41,7 +42,9 @@ function App() {
         <AuthProvider>
           <CartProvider>
             <ProductsProvider>
-              <LayoutRoutes></LayoutRoutes>
+              <TimePaymentProvider>
+                <LayoutRoutes></LayoutRoutes>
+              </TimePaymentProvider>
             </ProductsProvider>
           </CartProvider>
         </AuthProvider>

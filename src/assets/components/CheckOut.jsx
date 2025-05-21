@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading/Loading";
 import { useProducts } from "./Context/ProductContext";
+import { useCountdown } from "./Context/TimePaymentContext";
 
 export default function CheckOut() {
   const {
@@ -120,10 +121,24 @@ export default function CheckOut() {
     );
   };
 
+  const handleCancelOrder = (order) => {
+    axios
+      .delete(`http://localhost/orders/cancelOrder/${order.orderID}`)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log("Lỗi khi hủy đơn hàng:", err);
+      });
+  };
+
   const handleRemoveItemUpdate = (itemId) => {
     const confirmDelete = window.confirm("Bạn có muốn hủy đơn hàng này?");
     if (confirmDelete) {
+      handleCancelOrder(orderUpdate);
       setItemUpdate((prevItems) => prevItems.filter((i) => i.id !== itemId));
+      alert("Xóa Đơn Hàng Thành Công");
+      navigate("/dashboard");
     }
   };
 
