@@ -56,7 +56,7 @@ const ShoppingCart = ({ onClose }) => {
           <p>Subtotal: ${totalPrice}</p>
         </div>
 
-        <div className="button-container">
+        <div className="button-cart-container">
           <button className="view-cart" onClick={() => clearCart()}>
             Delete Cart
           </button>

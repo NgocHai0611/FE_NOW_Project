@@ -13,6 +13,8 @@ import {
   FiCreditCard,
 } from "react-icons/fi";
 
+import { FcStatistics } from "react-icons/fc";
+
 import { FaUsers } from "react-icons/fa";
 
 import axios from "axios";
@@ -20,6 +22,7 @@ import { AuthContext } from "./AuthUtils/AuthContexts";
 import { useProducts } from "./Context/ProductContext";
 import { useCart } from "./Context/CartContext";
 import { useNavigate } from "react-router-dom";
+import ThongKeChiTieu from "./ThongKeChiTieu";
 
 export default function MyProfile() {
   const [selectedTab, setSelectedTab] = useState("My Orders");
@@ -127,7 +130,8 @@ export default function MyProfile() {
       console.log(detail);
       const product = products.find((p) => p.idProduct === detail.productID);
       return {
-        id: product?.id || detail.productID,
+        id: product?.id || product._id,
+        productID: detail.productID,
         productName: detail.nameProduct,
         unitPrice: detail.unitPrice,
         qty: detail.qty,
@@ -241,6 +245,7 @@ export default function MyProfile() {
     { name: "Notifications", icon: <FiBell /> },
     { name: "Settings", icon: <FiSettings /> },
     { name: "Users", icon: <FaUsers /> },
+    { name: "Revenue Orders", icon: <FcStatistics /> },
   ];
 
   const getOrders = () => {
@@ -329,44 +334,43 @@ export default function MyProfile() {
         {/* Edit Profile */}
         {selectedTab === "Personal Information" && (
           <div className="personal-info">
-            <h2>Personal Information</h2>
+            <h2 className="personal-info-heading">Personal Information</h2>
             {errorMessage && (
-              <div style={{ color: "red", marginBottom: "1rem" }}>
-                {errorMessage}
-              </div>
+              <div className="error-message">{errorMessage}</div>
             )}
             {successMessage && (
-              <div style={{ color: "green", marginBottom: "1rem" }}>
-                {successMessage}
-              </div>
+              <div className="success-message">{successMessage}</div>
             )}
+
             <form onSubmit={handleUpdateProfile} className="edit-profile-form">
-              <div className="form-group">
-                <label>Name</label>
-                <input
-                  type="text"
-                  value={editForm.name}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, name: e.target.value })
-                  }
-                  placeholder="Enter your name"
-                  disabled={loading}
-                />
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Name</label>
+                  <input
+                    type="text"
+                    value={editForm.name}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, name: e.target.value })
+                    }
+                    placeholder="Enter your name"
+                    disabled={loading}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    value={editForm.email}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, email: e.target.value })
+                    }
+                    placeholder="Enter your email"
+                    disabled={loading}
+                  />
+                </div>
               </div>
-              <div className="form-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  value={editForm.email}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, email: e.target.value })
-                  }
-                  placeholder="Enter your email"
-                  disabled={loading}
-                />
-              </div>
-              <div className="form-group">
-                <label>Password </label>
+              <div className="form-group full-width">
+                <label>Password (leave blank to keep current)</label>
                 <input
                   type="password"
                   value={editForm.password}
@@ -377,7 +381,8 @@ export default function MyProfile() {
                   disabled={loading}
                 />
               </div>
-              <div className="form-group">
+
+              <div className="form-group full-width">
                 <label>Profile Picture</label>
                 <input
                   type="file"
@@ -389,17 +394,16 @@ export default function MyProfile() {
                   <img
                     src={URL.createObjectURL(editForm.pic)}
                     alt="Preview"
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      marginTop: "10px",
-                    }}
+                    className="profile-pic-preview"
                   />
                 )}
               </div>
-              <button type="submit" disabled={loading}>
-                {loading ? "Updating..." : "Update Profile"}
-              </button>
+
+              <div className="button-container">
+                <button type="submit" disabled={loading}>
+                  {loading ? "Updating..." : "Update Profile"}
+                </button>
+              </div>
             </form>
           </div>
         )}
@@ -714,6 +718,17 @@ export default function MyProfile() {
           </div>
         )}
 
+        {selectedTab === "Revenue Orders" && (
+          <div
+            className="container__statics--order"
+            style={{ height: 600, overflowY: "auto", width: "100%" }}
+          >
+            <div>
+              <ThongKeChiTieu customerID={user.id}></ThongKeChiTieu>
+            </div>
+          </div>
+        )}
+
         {![
           "Personal Information",
           "Manage Addresses",
@@ -721,6 +736,7 @@ export default function MyProfile() {
           "Settings",
           "My Orders",
           "My Wishlists",
+          "Revenue Orders",
           "Notifications",
           user.isAdmin && "Users",
         ].includes(selectedTab) && (

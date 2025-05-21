@@ -133,12 +133,21 @@ export default function CheckOut() {
   };
 
   const handleRemoveItemUpdate = (itemId) => {
-    const confirmDelete = window.confirm("Bạn có muốn hủy đơn hàng này?");
-    if (confirmDelete) {
-      handleCancelOrder(orderUpdate);
+    const itemCount = itemUpdate.length;
+
+    if (itemCount === 1) {
+      // Nếu chỉ còn 1 item thì hỏi xác nhận huỷ đơn hàng
+      const confirmDelete = window.confirm("Bạn có muốn hủy đơn hàng này?");
+      if (confirmDelete) {
+        handleCancelOrder(orderUpdate);
+        setItemUpdate([]);
+        alert("Đơn hàng đã bị hủy hoàn toàn.");
+        navigate("/dashboard");
+      }
+    } else {
+      // Nếu còn nhiều item thì không hỏi, chỉ xóa item đó
       setItemUpdate((prevItems) => prevItems.filter((i) => i.id !== itemId));
-      alert("Xóa Đơn Hàng Thành Công");
-      navigate("/dashboard");
+      alert("Đã xóa sản phẩm khỏi đơn hàng.");
     }
   };
 

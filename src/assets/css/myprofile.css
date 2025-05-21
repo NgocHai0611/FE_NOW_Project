@@ -6,22 +6,7 @@
   padding: 20px;
 }
 
-/* Sidebar */
-.sidebar {
-  width: 25%;
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.sidebar h2 {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
+/* Khung ảnh profile */
 /* Khung ảnh profile */
 .profile-picture {
   width: 100px;
@@ -36,6 +21,119 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.profile-picture-update {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px; /* Spacing between Name and Email fields */
+}
+
+.form-group {
+  flex: 1; /* Each field takes equal space */
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  flex: none;
+  width: 100%;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-group input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  outline: none;
+}
+
+.form-group input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.profile-pic-preview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%; /* Make the image circular */
+  margin: 10px auto; /* Center the image horizontally */
+  display: block; /* Ensure the image is a block element for margin auto to work */
+  border: 1px solid #ddd;
+}
+
+.edit-profile-form button {
+  padding: 12px;
+  background: #7f7f7f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: flex-start;
+}
+
+.edit-profile-form button:hover {
+  background: #000000;
+}
+
+.edit-profile-form button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Center the Update Profile button */
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: -10px;
+}
+
+.edit-profile {
+  padding: 15px;
+  border-radius: 10px;
+  color: #fff;
+  background-color: #000;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 25%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.sidebar h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
 }
 
 /* Danh sách menu */
@@ -79,13 +177,6 @@
   color: gray;
   margin-top: 10px;
 }
-.profile-container {
-  display: flex;
-  align-items: flex-start;
-  width: 85.3%;
-  margin: auto;
-  gap: 20px;
-}
 
 .sidebar {
   width: 25%;
@@ -102,74 +193,12 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.personal-info {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.edit-profile-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.profile-picture-update {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.form-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 250px; /* Điều chỉnh khoảng cách giữa các ô */
-}
-
-.form-group {
-  flex: 1;
-}
-
-.form-group label {
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.form-group input {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-.edit-profile-form button {
-  padding: 10px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.edit-profile-form button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.full-width {
-  width: 100%;
-}
-.edit-profile {
-  padding: 15px;
-  border-radius: 10px;
-  color: #fff;
-  background-color: #000;
-}
 .manage-addresses {
   padding: 20px;
 }
@@ -521,6 +550,7 @@ input:checked + .slider:before {
 }
 
 .order-card {
+  width: 800px;
   border-bottom: 1px solid #ccc;
   padding: 20px 0;
 }
@@ -607,4 +637,140 @@ input:checked + .slider:before {
 
 .grant-button:hover {
   background-color: #222;
+}
+
+.personal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  /* No background or shadow to match .content */
+}
+
+.personal-info-heading {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+  text-align: center; /* Center the heading */
+}
+
+.error-message {
+  color: #d32f2f;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.success-message {
+  color: #2e7d32;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.edit-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-picture-update {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px; /* Spacing between Name and Email fields */
+}
+
+.form-group {
+  flex: 1; /* Each field takes equal space */
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  flex: none;
+  width: 100%;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-group input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  outline: none;
+}
+
+.form-group input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.profile-pic-preview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%; /* Make the image circular */
+  margin: 10px auto; /* Center the image horizontally */
+  display: block; /* Ensure the image is a block element for margin auto to work */
+  border: 1px solid #ddd;
+}
+
+.edit-profile-form button {
+  padding: 12px;
+  background: #7f7f7f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: flex-start;
+}
+
+.edit-profile-form button:hover {
+  background: #000000;
+}
+
+.edit-profile-form button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Center the Update Profile button */
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: -10px;
+}
+
+.edit-profile {
+  padding: 15px;
+  border-radius: 10px;
+  color: #fff;
+  background-color: #000;
 }

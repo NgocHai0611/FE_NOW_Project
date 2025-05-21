@@ -15,11 +15,11 @@ const PaymentProcess = () => {
     orderCode,
     countdown: initialCountdown,
     statusOrder,
-    itemOrderUpdate,
+    itemUpdate,
     orderUpdate,
   } = location.state || {};
 
-  const [countdown, setCountdown] = useState(initialCountdown || 120); // Thời gian countdown là 2 phút (120 giây)
+  const [countdown, setCountdown] = useState(initialCountdown || 60); // Thời gian countdown là 2 phút (120 giây)
   const [isExpired, setIsExpired] = useState(false); // Trạng thái hết hạn
   const [loading, setLoading] = useState(false);
   const deliveryCharge = 5;
@@ -43,19 +43,27 @@ const PaymentProcess = () => {
   const grandTotal = subtotal - 0 + deliveryCharge;
 
   const productsToRender =
-    statusOrder === "update" ? itemOrderUpdate || [] : cartItems || [];
+    statusOrder === "update" ? itemUpdate || [] : cartItems || [];
 
   // Handle Edit Order
   const handleUpdateOrder = (status) => {
     setLoading(true); // bắt đầu loading
+
+    const subtotal = itemUpdate.reduce(
+      (acc, product) => acc + product.unitPrice * product.qty,
+      0
+    );
+    const grandTotal = subtotal - 0 + deliveryCharge;
+    console.log("Tổng Tiền Update Trong Giao Diện  ", grandTotal);
+
     const userID = user.id;
     console.log(userID);
 
-    console.log("Dang Thuc Hien Update Order ");
+    console.log("Dang Thuc Hien Update Order ", itemUpdate);
 
     axios
       .post("http://localhost/orders/updateOrder", {
-        items: itemOrderUpdate,
+        items: itemUpdate,
         userID,
         orders: orderUpdate,
         status,
@@ -92,11 +100,11 @@ const PaymentProcess = () => {
       });
   };
 
-  const handleUpdateProduct = () => {
+  const handleUpdateProduct = (items) => {
     setLoading(true); // bắt đầu loading
     axios
       .post("http://localhost/products/update-stock", {
-        cartItems,
+        items,
       })
       .then((res) => {})
       .catch((err) => {
@@ -119,11 +127,11 @@ const PaymentProcess = () => {
       timer = setTimeout(() => {
         setQrData(""); // Ẩn mã QR
         setIsExpired(true); // Đặt trạng thái mã QR hết hạn
-        alert("Mã QR đã hết hạn, vui lòng tạo lại.");
 
         // Điều hướng tới trang thất bại
+        clearCart(user.id);
         navigate("/paymentFail");
-      }, 2 * 60 * 1000); // 2 phút
+      }, 1 * 60 * 1000); // 2 phút
 
       // Cleanup
       return () => {
@@ -133,9 +141,12 @@ const PaymentProcess = () => {
     } else if (countdown === 0 && !isExpired) {
       setIsExpired(true); // Đặt trạng thái hết hạn khi countdown về 0
       if (statusOrder && orderUpdate) {
+        clearCart(user.id);
         navigate("/paymentFail");
       } else {
+        alert("Sản Phẩm Đã Được Thêm Vào Trang Thanh Toán Sau ");
         handleSaveOrder("PENDING");
+        clearCart(user.id);
         navigate("/paymentFail"); // Điều hướng ngay lập tức khi hết hạn
       }
     }
@@ -159,10 +170,10 @@ const PaymentProcess = () => {
             clearInterval(interval);
             if (statusOrder && orderUpdate) {
               handleUpdateOrder("PAID");
-              handleUpdateProduct();
+              handleUpdateProduct(itemUpdate);
             } else {
               handleSaveOrder("PAID");
-              handleUpdateProduct();
+              handleUpdateProduct(cartItems);
             }
 
             clearCart(user.id);

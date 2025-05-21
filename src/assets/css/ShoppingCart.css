@@ -95,13 +95,13 @@
 }
 
 /* Button Container */
-.button-container {
+.button-cart-container {
   display: flex;
   justify-content: space-between;
   margin-top: 24px;
 }
 
-.button-container button {
+.button-cart-container button {
   padding: 10px 16px;
   border: none;
   border-radius: 6px;
