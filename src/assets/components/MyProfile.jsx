@@ -151,7 +151,26 @@ export default function MyProfile() {
     console.log("Order Cancle ", order);
   };
 
- 
+  const handleGrantAdmin = async (userId) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3004/api/auth/grant-admin/${userId}`
+      );
+      const updatedUser = response.data;
+
+      // Cập nhật lại danh sách user trong state
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === updatedUser._id ? updatedUser : user
+        )
+      );
+
+      alert("Cấp Quyền Thành Công !");
+    } catch (error) {
+      console.error("Lỗi khi cấp quyền admin:", error);
+      alert("Không thể cấp quyền cho người dùng này!");
+    }
+  };
   // Xử lý thay đổi input file ảnh
   const handleImageChange = (e) => {
     const file = e.target.files[0];
