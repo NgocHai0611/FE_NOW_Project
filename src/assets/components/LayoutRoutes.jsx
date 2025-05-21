@@ -24,6 +24,7 @@ import PaymentProcess from "../components/Payments/Payment";
 import PaymentSuccess from "../components/Payments/PaymentSuccess";
 import PaymentFail from "../components/Payments/PaymentFail";
 import CheckoutTest from "../components/Payments/CheckOutTest";
+import CountdownBar from "./Payments/CountDownPaymentBar";
 
 // Thống kê
 import ThongKe from "../components/ThongKe";

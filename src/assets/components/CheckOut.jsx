@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "../css/checkout.css";
 import { FaTrash } from "react-icons/fa";
 import { useCart } from "./Context/CartContext";
@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import Loading from "./Loading/Loading";
+import { useProducts } from "./Context/ProductContext";
 
 export default function CheckOut() {
   const {
@@ -19,6 +20,7 @@ export default function CheckOut() {
   } = useCart();
 
   const { user } = useContext(AuthContext);
+  const { products } = useProducts();
 
   const [discountCode, setDiscountCode] = useState("");
   const [discount, setDiscount] = useState(0);
@@ -31,10 +33,22 @@ export default function CheckOut() {
   const [loading, setLoading] = useState(false);
   const location = useLocation(); // Thêm dòng này
 
+  const initialItems =
+    location.state && location.state.itemOrderUpdate
+      ? location.state.itemOrderUpdate
+      : [];
+
+  // Khởi tạo state 'items' với dữ liệu ban đầu lấy từ location.state
+  const [itemUpdate, setItemUpdate] = useState(initialItems);
+
+  useEffect(() => {
+    console.log("items đã được cập nhật:", itemUpdate);
+  }, [itemUpdate]);
+
   const { statusOrder, orderUpdate, itemOrderUpdate } = location.state || {};
 
   const productsToRender =
-    statusOrder === "update" ? itemOrderUpdate || [] : cartItems || [];
+    statusOrder === "update" ? itemUpdate || [] : cartItems || [];
 
   console.log("Order Update ", orderUpdate);
   console.log("Item Order Update ", itemOrderUpdate);
@@ -44,11 +58,11 @@ export default function CheckOut() {
     try {
       const res = await axios.post(
         "http://localhost:3003/create-payment-link",
-        { grandTotal, cartItems, itemOrderUpdate, statusOrder }
+        { grandTotal, cartItems, itemUpdate, statusOrder }
       );
       setQrData(res.data.qrCode);
       setOrderCode(res.data.orderCode);
-      setCountdown(120); // Reset countdown khi tạo mã QR mới
+      setCountdown(60); // Reset countdown khi tạo mã QR mới
       setIsExpired(false); // Đặt trạng thái hết hạn là false
 
       // Chuyển sang trang PaymentProcess và truyền dữ liệu qua state
@@ -56,10 +70,10 @@ export default function CheckOut() {
         state: {
           qrData: res.data.qrCode,
           orderCode: res.data.orderCode,
-          countdown: 120,
+          countdown: 60,
           statusOrder,
           orderUpdate,
-          itemOrderUpdate,
+          itemUpdate,
         },
       });
     } catch (err) {
@@ -76,10 +90,54 @@ export default function CheckOut() {
     }
   };
 
-  const subtotal = cartItems.reduce(
+  const handleIncreaseItemUpdate = (item) => {
+    console.log("Item update ", item);
+    setItemUpdate((prevItems) =>
+      prevItems.map((i) => {
+        if (i.id === item.id) {
+          // Tăng nếu chưa vượt quá tồn kho
+          if (i.qty < getProductStock(i.id)) {
+            return { ...i, qty: i.qty + 1 };
+          } else {
+            alert("Đã đạt số lượng tồn kho tối đa");
+            return i; // giữ nguyên
+          }
+        }
+        return i;
+      })
+    );
+  };
+
+  const handleDecreaseItemUpdate = (item) => {
+    setItemUpdate((prevItems) =>
+      prevItems.map((i) => {
+        if (i.id === item.id) {
+          // Giảm nhưng không nhỏ hơn 1
+          return { ...i, qty: Math.max(1, i.qty - 1) };
+        }
+        return i;
+      })
+    );
+  };
+
+  const handleRemoveItemUpdate = (itemId) => {
+    const confirmDelete = window.confirm("Bạn có muốn hủy đơn hàng này?");
+    if (confirmDelete) {
+      setItemUpdate((prevItems) => prevItems.filter((i) => i.id !== itemId));
+    }
+  };
+
+  // Hàm lấy số lượng tồn kho của sản phẩm từ products
+  const getProductStock = (id) => {
+    const product = products.find((p) => p.id === id); // ✅ đúng vì item.id === product.id
+    return product ? product.qtyStock || 0 : 0;
+  };
+
+  const subtotal = (cartItems.length ? cartItems : itemUpdate || []).reduce(
     (acc, product) => acc + product.unitPrice * product.qty,
     0
   );
+
   const grandTotal = subtotal - discount + deliveryCharge;
 
   return (
@@ -128,21 +186,33 @@ export default function CheckOut() {
                 <div className="quantity-control quantity-column">
                   <button
                     className="quantity-button"
-                    onClick={() => handleDecreaseItem(product.id)}
+                    onClick={() =>
+                      statusOrder === "update"
+                        ? handleDecreaseItemUpdate(product)
+                        : handleDecreaseItem(product.id)
+                    }
                   >
                     -
                   </button>
                   <span>{product.qty}</span>
                   <button
                     className="quantity-button"
-                    onClick={() => handleIncreaseItem(product)}
+                    onClick={() =>
+                      statusOrder === "update"
+                        ? handleIncreaseItemUpdate(product)
+                        : handleIncreaseItem(product)
+                    }
                   >
                     +
                   </button>
                 </div>
                 <button
                   className="delete-button"
-                  onClick={() => removeFromCart(product.id)}
+                  onClick={() =>
+                    statusOrder === "update"
+                      ? handleRemoveItemUpdate(product.id)
+                      : removeFromCart(product.id)
+                  }
                 >
                   <FaTrash />
                 </button>

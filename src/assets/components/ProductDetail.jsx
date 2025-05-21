@@ -28,8 +28,13 @@ export default function ProductDetail() {
   // Số lượng hiển thị tạm thời trong component
   const [quantity, setQuantity] = useState(1);
 
-  const handleAddProductToCart = (qtyStock) => {
-    addToCart(product, quantity); // Gọi hàm context thêm vào giỏ hàng
+  const handleAddProductToCart = (product, quantity) => {
+    if (quantity > product.qtyStock) {
+      alert("❌ Số lượng vượt quá tồn kho. Vui lòng chọn ít hơn.");
+      return;
+    }
+
+    addToCart(product, quantity); // Gọi hàm thêm vào giỏ hàng nếu còn đủ tồn kho
     setQuantity(1); // Reset lại về 1
   };
 
@@ -115,7 +120,7 @@ export default function ProductDetail() {
           </div>
           <button
             className="add_to_cart_button"
-            onClick={handleAddProductToCart}
+            onClick={() => handleAddProductToCart(product, quantity)}
           >
             Add to Cart
           </button>
